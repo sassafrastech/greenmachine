@@ -1,0 +1,9 @@
+<h2>GreenMachine Report</h2>
+
+<% if @error %>
+  <%= @error %>
+  <%= link_to('Return to Default', '/green-machine') %>
+<% else %>
+  From: <%= params[:start] %>
+  To: <%= params[:finish] %>
+<% end %>
