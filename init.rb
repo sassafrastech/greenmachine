@@ -6,5 +6,6 @@ Redmine::Plugin.register :green_machine do
   url 'https://github.com/sassafrastech/greenmachine'
   author_url 'http://sassafras.coop/about'
 
-  menu :top_menu, :polls, { :controller => 'gm_reports', :action => 'show' }, :caption => 'GreenMachine'
+  menu :top_menu, :polls, { controller: 'gm_reports', action: 'show' },
+    caption: 'GreenMachine', if: -> (x) { GmUserType.can_view?(User.current) }
 end
