@@ -1,0 +1,57 @@
+<table>
+  <tr>
+    <th></th>
+    <% @report.users.each do |user| %>
+      <th>
+        <div class="name"><%= user.firstname %></div>
+        <div class="type"><%= @report.user_types[user].name.capitalize %></div>
+      </th>
+    <% end %>
+    <th>Total Hours</th>
+    <th>Total <%= grid_type.to_s.capitalize %></th>
+    <th></th>
+  </tr>
+
+  <% @report.projects.each do |project| %>
+    <tr class="project-row">
+      <td>
+        <div class="name"><%= project.name %></div>
+        <% if grid_type == :revenue %>
+          <div class="rate"><%= number_to_currency(@report.project_rates[project].val) %></div>
+        <% end %>
+      </td>
+
+      <% @report.users.each do |user| %>
+        <td>
+          <% if chunk = @report.chunks[grid_type][[user, project]] %>
+            <div class="hours"><%= number_with_precision(chunk.hours, precision: 2) %></div>
+            <div class="rate"><%= number_to_currency(chunk.rate.val) %></div>
+          <% end %>
+        </td>
+      <% end %>
+
+      <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 2) %></td>
+      <td><%= number_to_currency(@report.totals[grid_type][:by_project][project][:dollars]) %></td>
+    </tr>
+  <% end %>
+
+  <tr>
+    <td>Total Hours</td>
+    <% @report.users.each do |user| %>
+      <td><%= number_with_precision(@report.totals[grid_type][:by_user][user][:hours], precision: 2) %></td>
+    <% end %>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>Total <%= grid_type.to_s.capitalize %></td>
+    <% @report.users.each do |user| %>
+      <td><%= number_to_currency(@report.totals[grid_type][:by_user][user][:dollars]) %></td>
+    <% end %>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>

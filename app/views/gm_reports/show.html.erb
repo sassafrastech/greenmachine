@@ -6,6 +6,21 @@
 <% elsif @error %>
   <%= @error %>
 <% else %>
-  From: <%= params[:start] %>
-  To: <%= params[:finish] %>
+  Period: <%= params[:start] %> to <%= params[:finish] %>
+
+  <% unless @report.warnings.empty? %>
+    Warnings
+    <ul>
+      <% @report.warnings.each do |w| %>
+        <li><%= w %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <h2>Revenue</h2>
+  <%= render('grid', grid_type: :revenue) %>
+
+  <h2>Wages</h2>
+  <%= render('grid', grid_type: :wage) %>
+
 <% end %>

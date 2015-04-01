@@ -1,3 +1,4 @@
+# Stores the user's type for GreenMachine purposes.
 class GmUserType < ActiveRecord::Base
   unloadable
   belongs_to :user

@@ -13,5 +13,8 @@ class GmReportsController < ApplicationController
     end
 
     return @date_error = "Start date is after finish date." if params[:start] > params[:finish]
+
+    @report = GmGridReport.new(interval: GmInterval.new(start: params[:start], finish: params[:finish]))
+    @report.run
   end
 end
