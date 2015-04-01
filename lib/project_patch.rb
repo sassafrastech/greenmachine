@@ -8,7 +8,11 @@ module ProjectPatch
   module InstanceMethods
     # Gets the full rate for this project over the given interval.
     def gm_full_rate(interval)
-      GmRate.where(kind: 'project_revenue_full', project_id: id).last
+      if name == 'Sassafras Internal'
+        GmRate.new(val: 0)
+      else
+        GmRate.where(kind: 'project_revenue_full', project_id: id).last
+      end
     end
   end
 end

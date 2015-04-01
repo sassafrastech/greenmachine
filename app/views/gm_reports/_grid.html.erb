@@ -3,6 +3,9 @@
   <%= render('grid_header', grid_type: grid_type) %>
 
   <% @report.projects.each do |project| %>
+    <%# Don't show the internal proj in revenue. %>
+    <% next if grid_type == :revenue && project == @report.internal_proj %>
+
     <tr class="project-row">
       <td>
         <div class="name"><%= project.name %></div>
