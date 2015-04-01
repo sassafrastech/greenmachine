@@ -5,7 +5,7 @@ class CreateGmRates < ActiveRecord::Migration
       t.integer :user_id
       t.integer :project_id
       t.date :effective_on, null: false
-      t.decimal :val, null: false
+      t.decimal :val, null: false, precision: 15, scale: 2
     end
     add_index :gm_rates, :kind
     add_index :gm_rates, :user_id
