@@ -6,7 +6,7 @@ ActionDispatch::Callbacks.to_prepare do
   Project.send(:include, ProjectPatch) unless Project.included_modules.include? ProjectPatch
 end
 
-Redmine::Plugin.register :green_machine do
+Redmine::Plugin.register :greenmachine do
   name 'Sassafras Green Machine'
   author 'Tom Smyth'
   description 'Sassafras Billing Plugin'
