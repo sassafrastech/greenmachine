@@ -154,7 +154,7 @@ class GmGridReport
     users.each do |u|
       claimed_hours = summaries[:pto_claimed].by_user[u] || 0
       claimed_dollars = claimed_hours * u.gm_wage_rate(interval).val
-      summary.by_user[u] = summaries[:gross_pto].by_user[u] - claimed_dollars
+      summary.by_user[u] = (summaries[:gross_pto].by_user[u] || 0) - claimed_dollars
     end
     summaries[:net_pto] = summary
 
