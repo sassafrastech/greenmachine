@@ -9,12 +9,14 @@
   Period: <%= params[:start] %> to <%= params[:finish] %>
 
   <% unless @report.warnings.empty? %>
-    Warnings
-    <ul>
-      <% @report.warnings.each do |w| %>
-        <li><%= w %></li>
-      <% end %>
-    </ul>
+    <div class="warnings">
+      Warnings
+      <ul>
+        <% @report.warnings.each do |w| %>
+          <li><%= w %></li>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <h2>Revenue</h2>
@@ -22,5 +24,8 @@
 
   <h2>Wages</h2>
   <%= render('grid', grid_type: :wage) %>
+
+  <h2>Summary</h2>
+  <%= render('summary_grid') %>
 
 <% end %>

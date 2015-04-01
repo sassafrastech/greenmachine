@@ -1,16 +1,6 @@
 <table>
-  <tr>
-    <th></th>
-    <% @report.users.each do |user| %>
-      <th>
-        <div class="name"><%= user.firstname %></div>
-        <div class="type"><%= @report.user_types[user].name.capitalize %></div>
-      </th>
-    <% end %>
-    <th>Total Hours</th>
-    <th>Total <%= grid_type.to_s.capitalize %></th>
-    <th></th>
-  </tr>
+
+  <%= render('grid_header', grid_type: grid_type) %>
 
   <% @report.projects.each do |project| %>
     <tr class="project-row">

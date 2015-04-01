@@ -1,0 +1,73 @@
+<table>
+  <%= render('grid_header', grid_type: :summary) %>
+
+  <% [:revenue, :wage].each do |type| %>
+    <tr>
+      <td>
+        Total <%= type.to_s.capitalize %>
+      </td>
+      <% @report.users.each do |user| %>
+        <td><%= number_to_currency(@report.totals[type][:by_user][user][:dollars]) %></td>
+      <% end %>
+      <td><%= number_to_currency(@report.totals[type][:dollars]) %></td>
+      <td></td>
+    </tr>
+  <% end %>
+
+  <tr>
+    <td>
+      Revenue/Wage Ratio
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_with_precision(@report.summaries[:rev_wage].by_user[user], precision: 2) %></td>
+    <% end %>
+    <td><%= number_with_precision(@report.summaries[:rev_wage].total, precision: 2) %></td>
+    <td></td>
+  </tr>
+
+  <tr><td>&nbsp;</td></tr>
+
+  <tr>
+    <td>
+      PTO Hours/Day
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_with_precision(@report.summaries[:pto_election].by_user[user], precision: 2) %></td>
+    <% end %>
+    <td><%= number_with_precision(@report.summaries[:pto_election].total, precision: 2) %></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>
+      Gross PTO Savings
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_to_currency(@report.summaries[:gross_pto].by_user[user]) %></td>
+    <% end %>
+    <td><%= number_to_currency(@report.summaries[:gross_pto].total) %></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>
+      PTO Claimed
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_with_precision(@report.summaries[:pto_claimed].by_user[user], precision: 2) %></td>
+    <% end %>
+    <td><%= number_with_precision(@report.summaries[:pto_claimed].total, precision: 2) %></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>
+      Net PTO Savings
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_to_currency(@report.summaries[:net_pto].by_user[user]) %></td>
+    <% end %>
+    <td><%= number_to_currency(@report.summaries[:net_pto].total) %></td>
+    <td></td>
+  </tr>
+</table>

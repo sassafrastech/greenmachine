@@ -1,7 +1,7 @@
 # Handles compilation of data for the main GreenMachine grid report.
 class GmGridReport
   attr_accessor :interval, :chunk_data, :users, :projects, :chunks, :warnings, :project_rates,
-    :user_types, :user_wage_rates, :totals
+    :user_types, :user_wage_rates, :totals, :summaries, :pto_proj
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -15,6 +15,7 @@ class GmGridReport
     extract_projects
     build_chunks
     calculate_totals
+    calculate_summaries
   end
 
   private
@@ -46,11 +47,23 @@ class GmGridReport
     unless no_rate.empty?
       self.warnings << "The following users had hours but no GM base wage rate: #{no_rate.map(&:name).join(', ')}"
     end
+
+    no_pto_election = users.select{ |u| u.gm_type(interval).has_pto? && u.gm_pto_election(interval).nil? }
+    self.users -= no_pto_election
+    unless no_pto_election.empty?
+      self.warnings << "The following users had hours but no PTO election: #{no_pto_election.map(&:name).join(', ')}"
+    end
   end
 
   # Get all projects included in chunk_data and sort by name.
   def extract_projects
     self.projects = chunk_data.map(&:project).uniq.sort_by(&:name)
+
+    # Remove special projects
+    self.pto_proj = projects.detect{ |p| p.name == 'Paid Time Off' }
+    self.projects -= [pto_proj]
+
+    # Ensure all projects have rates.
     self.project_rates = Hash[*projects.map{ |p| [p, p.gm_full_rate(interval)] }.flatten]
 
     no_rate = projects.select{ |p| project_rates[p].nil? }
@@ -101,6 +114,48 @@ class GmGridReport
           end
         end
       end
+
+      # Grand totals
+      [:hours, :dollars].each do |measure|
+        totals[type][measure] = totals[type][:by_user].values.sum{ |v| v[measure] }
+      end
     end
+  end
+
+  def calculate_summaries
+    self.summaries = {}
+
+    # Rev/wage
+    summary = GmSummary.new(total_type: :average)
+    users.each do |u|
+      rev = totals[:revenue][:by_user][u][:dollars]
+      wage = totals[:wage][:by_user][u][:dollars]
+      summary.by_user[u] = wage == 0 ? 0 : rev / wage
+    end
+    summaries[:rev_wage] = summary
+
+    # PTO election
+    summary = GmSummary.new
+    users.each{ |u| summary.by_user[u] = u.gm_pto_election(interval).try(:val) }
+    summaries[:pto_election] = summary
+
+    # Gross PTO
+    summary = GmSummary.new
+    users.each{ |u| summary.by_user[u] = u.gm_gross_pto(interval) }
+    summaries[:gross_pto] = summary
+
+    # PTO Claimed (PTO chunks still get generated even though not shown in main grid)
+    summary = GmSummary.new
+    users.each{ |u| summary.by_user[u] = chunks[:wage][[u, pto_proj]].try(:hours) }
+    summaries[:pto_claimed] = summary
+
+    # Net PTO
+    summary = GmSummary.new
+    users.each do |u|
+      claimed_hours = summaries[:pto_claimed].by_user[u] || 0
+      claimed_dollars = claimed_hours * u.gm_wage_rate(interval).val
+      summary.by_user[u] = summaries[:gross_pto].by_user[u] - claimed_dollars
+    end
+    summaries[:net_pto] = summary
   end
 end
