@@ -39,13 +39,13 @@ class GmGridReport
     no_type = users.select{ |u| user_types[u].nil? }
     self.users -= no_type
     unless no_type.empty?
-      self.warnings << "The following users had hours but no GM user type: #{no_type.map(&:name).join(', ')}"
+      self.warnings << "The following users had hours but no user type: #{no_type.map(&:name).join(', ')}"
     end
 
     no_rate = users.select{ |u| user_wage_rates[u].nil? }
     self.users -= no_rate
     unless no_rate.empty?
-      self.warnings << "The following users had hours but no GM base wage rate: #{no_rate.map(&:name).join(', ')}"
+      self.warnings << "The following users had hours but no base wage rate: #{no_rate.map(&:name).join(', ')}"
     end
 
     no_pto_election = users.select{ |u| u.gm_type(interval).has_pto? && u.gm_pto_election(interval).nil? }
