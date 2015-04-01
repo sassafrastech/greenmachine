@@ -29,6 +29,28 @@
 
   <tr>
     <td>
+      PTO Claimed
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_with_precision(@report.summaries[:pto_claimed].by_user[user], precision: 2) %></td>
+    <% end %>
+    <td><%= number_with_precision(@report.summaries[:pto_claimed].total, precision: 2) %></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>
+      Wages Including PTO
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_to_currency(@report.summaries[:wages_incl_pto].by_user[user]) %></td>
+    <% end %>
+    <td><%= number_to_currency(@report.summaries[:wages_incl_pto].total) %></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>
       PTO Hours/Day
     </td>
     <% @report.users.each do |user| %>
@@ -51,17 +73,6 @@
 
   <tr>
     <td>
-      PTO Claimed
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_with_precision(@report.summaries[:pto_claimed].by_user[user], precision: 2) %></td>
-    <% end %>
-    <td><%= number_with_precision(@report.summaries[:pto_claimed].total, precision: 2) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
       Net PTO Savings
     </td>
     <% @report.users.each do |user| %>
@@ -70,4 +81,5 @@
     <td><%= number_to_currency(@report.summaries[:net_pto].total) %></td>
     <td></td>
   </tr>
+
 </table>
