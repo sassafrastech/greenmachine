@@ -8,7 +8,7 @@ module ProjectPatch
   module InstanceMethods
     # Gets the full rate for this project over the given interval.
     def gm_full_rate(interval)
-      GmRate.new(val: 10)
+      GmRate.where(kind: 'project_billed_full', project_id: id).last
     end
   end
 end

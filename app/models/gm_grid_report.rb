@@ -57,7 +57,8 @@ class GmGridReport
   def build_chunks
     [:revenue, :wage].each do |type|
       chunk_data.each do |total|
-        rate = total.user.gm_rate(type, total.project, interval)
+        rate = total.user.gm_rate('project_billed_adjusted', total.project, interval)
+        rate ||= project_rates[total.project] # Default to project rate if not found.
         chunks[type][[total.user, total.project]] = GmChunk.new(hours: total.hours, rate: rate)
       end
     end

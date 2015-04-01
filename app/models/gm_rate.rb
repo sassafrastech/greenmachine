@@ -1,11 +1,8 @@
-# Represents a rate over a particular interval.
-class GmRate
-  # multiple_matches indicates that more than one rate was found in the given interval
-  attr_accessor :val, :multiple_matches
+class GmRate < ActiveRecord::Base
+  unloadable
 
-  def initialize(attribs = {})
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
-  end
-
+  attr_accessor :multiple_matches
   alias_method :multiple_matches?, :multiple_matches
+
+
 end

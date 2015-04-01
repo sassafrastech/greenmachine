@@ -7,8 +7,8 @@ module UserPatch
 
   module InstanceMethods
     # Gets the GmRate for this user with the given type and project, over the given interval.
-    def gm_rate(type, project, interval)
-      GmRate.new(val: type == :revenue ? 8 : 6)
+    def gm_rate(kind, project, interval)
+      GmRate.where(kind: kind, user_id: id, project_id: project.id).last
     end
 
     def gm_type(interval)
