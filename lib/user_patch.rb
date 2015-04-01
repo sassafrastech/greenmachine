@@ -11,8 +11,16 @@ module UserPatch
       GmRate.where(kind: kind, user_id: id, project_id: project.id).last
     end
 
+    def gm_wage_rate(interval)
+      if gm_type(interval) && gm_type(interval).name == 'member'
+        GmRate.where(kind: 'member_wage_base').last
+      else
+        GmRate.where(kind: 'user_wage_base', user_id: id).last
+      end
+    end
+
     def gm_type(interval)
-      @gm_type ||= GmUserType.where(user_id: id).last
+      GmUserType.where(user_id: id).last
     end
   end
 end

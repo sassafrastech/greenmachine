@@ -1,7 +1,7 @@
 # Handles compilation of data for the main GreenMachine grid report.
 class GmGridReport
-  attr_accessor :interval, :chunk_data, :users, :projects, :chunks, :warnings, :project_rates, :user_types,
-   :totals
+  attr_accessor :interval, :chunk_data, :users, :projects, :chunks, :warnings, :project_rates,
+    :user_types, :user_wage_rates, :totals
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -33,11 +33,18 @@ class GmGridReport
   def extract_users
     self.users = chunk_data.map(&:user).uniq.sort_by(&:name)
     self.user_types = Hash[*users.map{ |u| [u, u.gm_type(interval)] }.flatten]
+    self.user_wage_rates = Hash[*users.map{ |u| [u, u.gm_wage_rate(interval)] }.flatten]
 
     no_type = users.select{ |u| user_types[u].nil? }
     self.users -= no_type
     unless no_type.empty?
       self.warnings << "The following users had hours but no GM user type: #{no_type.map(&:name).join(', ')}"
+    end
+
+    no_rate = users.select{ |u| user_wage_rates[u].nil? }
+    self.users -= no_rate
+    unless no_rate.empty?
+      self.warnings << "The following users had hours but no GM base wage rate: #{no_rate.map(&:name).join(', ')}"
     end
   end
 
@@ -56,10 +63,14 @@ class GmGridReport
   # Builds chunks (combinations of hour + rate) for revenue and wages.
   def build_chunks
     [:revenue, :wage].each do |type|
-      chunk_data.each do |total|
-        rate = total.user.gm_rate('project_billed_adjusted', total.project, interval)
-        rate ||= project_rates[total.project] # Default to project rate if not found.
-        chunks[type][[total.user, total.project]] = GmChunk.new(hours: total.hours, rate: rate)
+      chunk_data.each do |datum|
+        if type == :revenue
+          rate = datum.user.gm_rate('project_revenue_adjusted', datum.project, interval)
+          rate ||= project_rates[datum.project] # Default to project rate if not found.
+        else
+          rate = user_wage_rates[datum.user] # This is guaranteed to exist at this point.
+        end
+        chunks[type][[datum.user, datum.project]] = GmChunk.new(hours: datum.hours, rate: rate)
       end
     end
   end
