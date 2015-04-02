@@ -17,12 +17,12 @@ class GmInvoiceCreator
 
     # Given a Customer with ID=99 lets invoice them for an Item with ID=500
     invoice = Quickbooks::Model::Invoice.new
-    invoice.customer_id = 97
+    invoice.customer_id = project.gm_qb_customer_id || (raise "No customer ID.")
     invoice.txn_date = Date.today
     invoice.doc_number = next_number
 
     report.totals.each do |user, hours|
-      rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(user, interval).val
+      rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
       hours = hours.round(2)
 
       line_item = Quickbooks::Model::InvoiceLineItem.new

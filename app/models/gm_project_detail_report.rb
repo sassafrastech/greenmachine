@@ -66,10 +66,16 @@ class GmProjectDetailReport
       # A subset is a set of (issue, user, hours) tuples. We want to aggregate by issue, summing the hours.
       subset.group_by(&:issue).each do |issue, datums|
 
-        # We multiply the hours by the ratio of the user's rate for the project to the full rate for the project.
+        # For internal users, we multiply the hours by the ratio of the user's rate for the project to the full rate for the project.
         hours = datums.map do |d|
           full_rate = project.gm_full_rate(interval).val
-          adjustment_factor = full_rate == 0 ? 1 : (d.user.gm_project_rate(project, interval).val / full_rate)
+          adjustment_factor = if full_rate == 0
+            0
+          elsif !d.user.gm_type(interval).internal?
+            1
+          else
+            d.user.gm_project_rate(project, interval).val / full_rate
+          end
           d.hours * adjustment_factor
         end.sum
 

@@ -28,9 +28,9 @@
       <td>
         <% if grid_type == :revenue %>
           <% path = "/green-machine/reports/#{params[:start]}/#{params[:finish]}/project-detail/#{project.id}" %>
-          <%= link_to("HTML", path) %>
-          <%= link_to("CSV", "#{path}.csv") %>
-          <%= link_to("Invoice", "#{path}/create-invoice") %>
+          <%= link_to("[HTML]", path) %>
+          <%= link_to("[CSV]", "#{path}.csv") %>
+          <%= link_to("[Invoice]", "#{path}/create-invoice") unless project.gm_qb_customer_id.blank? %>
         <% end %>
       </td>
     </tr>
