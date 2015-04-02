@@ -6,11 +6,11 @@
 <% elsif @error %>
   <%= @error %>
 <% else %>
-  Period: <%= params[:start] %> to <%= params[:finish] %>
+  <p>Period: <%= params[:start] %> to <%= params[:finish] %></p>
 
   <% unless @report.warnings.empty? %>
     <div class="warnings">
-      Warnings
+      <strong>Warnings</strong>
       <ul>
         <% @report.warnings.each do |w| %>
           <li><%= w %></li>
