@@ -29,6 +29,10 @@ class GmProjectDetailReport
     end
   end
 
+  def csv_filename
+    "#{project.name.gsub(' ', '-').downcase}-timelog.csv"
+  end
+
   private
 
   # Run main SQL query to get hours per worker in the given time period.

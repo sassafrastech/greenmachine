@@ -36,7 +36,11 @@ class GmInvoiceCreator
       invoice.line_items << line_item
     end
 
-    service.create(invoice)
+    created_invoice = service.create(invoice)
+
+    attach_csv(created_invoice)
+
+    created_invoice
   end
 
   private
@@ -51,5 +55,27 @@ class GmInvoiceCreator
     existing = service.query('SELECT Id, DocNumber FROM Invoice ORDER BY MetaData.CreateTime DESC')
     latest_num = existing.entries.first.doc_number
     (latest_num.to_i + 1).to_s.rjust(INVOICE_NUM_LENGTH, '0')
+  end
+
+  def attach_csv(invoice)
+    upload = Quickbooks::Model::Attachable.new
+    upload.file_name = report.csv_filename
+    upload.content_type = 'text/csv'
+
+    # This bit is not quite working.
+    # entity = Quickbooks::Model::EntityRef.new
+    # entity.type = 'Invoice'
+    # entity.value = invoice.id.to_s
+    # upload.attachable_ref = Quickbooks::Model::AttachableRef.new(entity)
+
+    tmp_file = File.join(Rails.root, 'tmp', "#{invoice.id}-timelog.csv")
+    File.open(tmp_file, 'w'){ |f| f.write(report.to_csv) }
+
+    upload_service = Quickbooks::Service::Upload.new
+    upload_service.company_id = company_id
+    upload_service.access_token = access_token
+    upload_service.upload(tmp_file, 'text/csv', upload)
+
+    File.unlink(tmp_file)
   end
 end

@@ -14,7 +14,7 @@ class GmReportsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        render_csv(filename: "#{@project.name.gsub(' ', '-').downcase}-timelog", content: @report.to_csv)
+        render_csv(filename: @report.csv_filename, content: @report.to_csv)
       end
     end
   end
@@ -67,7 +67,7 @@ class GmReportsController < ApplicationController
   end
 
   def render_csv(options)
-    filename = sanitize_filename("#{options[:filename]}.csv")
+    filename = sanitize_filename(options[:filename])
 
     if request.env['HTTP_USER_AGENT'] =~ /msie/i
       headers['Pragma'] = 'public'
