@@ -22,9 +22,9 @@ class GmReportsController < ApplicationController
   def create_invoice
     build_project_report
 
-    if session[:qb_token]
+    if credential = GmCredential.first
       begin
-        @creator = GmInvoiceCreator.new(report: @report, token: session[:qb_token], secret: session[:qb_secret], company_id: session[:qb_realm])
+        @creator = GmInvoiceCreator.new(report: @report, credential: credential)
         @invoice = @creator.create
       rescue Quickbooks::AuthorizationFailure
         @auth_fail = true

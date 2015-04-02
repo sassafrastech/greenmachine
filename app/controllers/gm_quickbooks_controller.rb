@@ -9,9 +9,8 @@ class GmQuickbooksController < ApplicationController
   end
 
   def callback
-    @at = session[:qb_request_token].get_access_token(oauth_verifier: params[:oauth_verifier])
-    session[:qb_token] = @at.token
-    session[:qb_secret] = @at.secret
-    session[:qb_realm] = params['realmId']
+    access_token = session[:qb_request_token].get_access_token(oauth_verifier: params[:oauth_verifier])
+    GmCredential.delete_all
+    GmCredential.create(token: access_token.token, secret: access_token.secret, company_id: params['realmId'])
   end
 end

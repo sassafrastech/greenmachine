@@ -3,14 +3,12 @@ class GmInvoiceCreator
   INVOICE_NUM_LENGTH = 5
   NET_30_TERMS = 3
 
-  attr_accessor :report, :access_token, :token, :secret, :company_id, :services
+  attr_accessor :report, :credential, :services
 
   delegate :project, :interval, to: :report
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
-
-    self.access_token = OAuth::AccessToken.new($qb_oauth_consumer, token, secret)
   end
 
   def create
@@ -54,10 +52,7 @@ class GmInvoiceCreator
     services[:upload] = Quickbooks::Service::Upload.new
     services[:customer] = Quickbooks::Service::Customer.new
 
-    services.each do |k, s|
-      s.company_id = company_id
-      s.access_token = access_token
-    end
+    services.values.each{ |s| credential.apply_to(s) }
   end
 
   def next_number
