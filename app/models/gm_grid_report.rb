@@ -80,8 +80,7 @@ class GmGridReport
     [:revenue, :wage].each do |type|
       chunk_data.each do |datum|
         if type == :revenue
-          rate = datum.user.gm_rate('project_revenue_adjusted', datum.project, interval)
-          rate ||= project_rates[datum.project] # Default to project rate if not found.
+          rate = datum.user.gm_project_rate(datum.project, interval)
         else
           rate = user_wage_rates[datum.user] # This is guaranteed to exist at this point.
         end

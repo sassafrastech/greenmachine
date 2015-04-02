@@ -17,7 +17,11 @@ class GmUserType < ActiveRecord::Base
     name != 'inactive'
   end
 
-  def has_pto?
+  def internal?
     %w(member employee).include?(name)
+  end
+
+  def has_pto?
+    internal?
   end
 end

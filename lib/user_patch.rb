@@ -8,9 +8,10 @@ module UserPatch
   end
 
   module InstanceMethods
-    # Gets the GmRate for this user with the given type and project, over the given interval.
-    def gm_rate(kind, project, interval)
-      GmRate.where(kind: kind, user_id: id, project_id: project.id).last
+    # Gets the GmRate for this user for the given project, over the given interval.
+    def gm_project_rate(project, interval)
+      adjusted = GmRate.where(kind: 'project_revenue_adjusted', user_id: id, project_id: project.id).last
+      adjusted || project.gm_full_rate(interval) # User's rate is the full rate if no adjusted rate.
     end
 
     def gm_wage_rate(interval)

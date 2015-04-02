@@ -1,0 +1,23 @@
+<h1>GreenMachine Detail for <%= @project.name %></h1>
+
+Period: <%= params[:start] %> to <%= params[:finish] %>
+
+<% @report.chunk_groups.each do |user, chunks| %>
+  <h2><%= user == :sassy ? 'Sassafras' : user.name %></h2>
+  <table>
+    <tr>
+      <th>Issue</th>
+      <th>Hours</th>
+    </tr>
+    <% chunks.each do |chunk| %>
+      <tr>
+        <td><%= chunk.issue.tracker.name %> #<%= chunk.issue.id %>: <%= chunk.issue.subject %></td>
+        <td><%= number_with_precision(chunk.hours, precision: 2) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td>Total</td>
+      <td><%= number_with_precision(@report.totals[user], precision: 2) %></td>
+    </tr>
+  </table>
+<% end %>
