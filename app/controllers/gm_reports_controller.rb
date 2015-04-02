@@ -9,15 +9,28 @@ class GmReportsController < ApplicationController
   end
 
   def project_detail
-    @project = Project.find(params[:project_id])
-    @report = GmProjectDetailReport.new(interval: @interval, project: @project)
-    @report.run
+    build_project_report
 
     respond_to do |format|
       format.html
       format.csv do
         render_csv(filename: "#{@project.name.gsub(' ', '-').downcase}-timelog", content: @report.to_csv)
       end
+    end
+  end
+
+  def create_invoice
+    build_project_report
+
+    if session[:qb_token]
+      begin
+        @creator = GmInvoiceCreator.new(report: @report, token: session[:qb_token], secret: session[:qb_secret], company_id: session[:qb_realm])
+        @invoice = @creator.create
+      rescue Quickbooks::AuthorizationFailure
+        @auth_fail = true
+      end
+    else
+      @no_token = true
     end
   end
 
@@ -45,6 +58,12 @@ class GmReportsController < ApplicationController
     end
 
     @interval = GmInterval.new(start: params[:start], finish: params[:finish])
+  end
+
+  def build_project_report
+    @project = Project.find(params[:project_id])
+    @report = GmProjectDetailReport.new(interval: @interval, project: @project)
+    @report.run
   end
 
   def render_csv(options)

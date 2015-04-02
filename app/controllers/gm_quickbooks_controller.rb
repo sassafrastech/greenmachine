@@ -10,7 +10,8 @@ class GmQuickbooksController < ApplicationController
 
   def callback
     @at = session[:qb_request_token].get_access_token(oauth_verifier: params[:oauth_verifier])
-    session[:qb_token] = OAuth::AccessToken.new($qb_oauth_consumer, @at.token, @at.secret)
+    session[:qb_token] = @at.token
+    session[:qb_secret] = @at.secret
     session[:qb_realm] = params['realmId']
   end
 end
