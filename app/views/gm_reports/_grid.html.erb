@@ -26,8 +26,10 @@
       <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 2) %></td>
       <td><%= number_to_currency(@report.totals[grid_type][:by_project][project][:dollars]) %></td>
       <td>
-        <% if grid_type == :revenue  && @report.totals[grid_type][:by_project][project][:hours] > 0 %>
-          <%= link_to("HTML", "/green-machine/reports/#{params[:start]}/#{params[:finish]}/project-detail/#{project.id}") %>
+        <% if grid_type == :revenue %>
+          <% path = "/green-machine/reports/#{params[:start]}/#{params[:finish]}/project-detail/#{project.id}" %>
+          <%= link_to("HTML", path) %>
+          <%= link_to("CSV", "#{path}.csv") %>
         <% end %>
       </td>
     </tr>

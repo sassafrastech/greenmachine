@@ -12,6 +12,23 @@ class GmProjectDetailReport
     calculate_totals
   end
 
+  # Assumes report has already been run.
+  def to_csv
+    CSV.generate do |csv|
+      # Header row.
+      csv << ['Source', 'Issue', 'Hours']
+
+      chunk_groups.each do |user, chunks|
+        csv << [user == :sassy ? 'Sassafras' : user.name]
+        chunks.each do |chunk|
+          rounded_hours = (chunk.hours * 100).ceil.to_f / 100.0 # Round up to next hundredth to avoid 0.00
+          csv << ['', "#{chunk.issue.tracker.name} ##{chunk.issue.id}: #{chunk.issue.subject}", rounded_hours]
+        end
+        csv << ['', "Total", totals[user].round(2)]
+      end
+    end
+  end
+
   private
 
   # Run main SQL query to get hours per worker in the given time period.

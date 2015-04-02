@@ -12,6 +12,13 @@ class GmReportsController < ApplicationController
     @project = Project.find(params[:project_id])
     @report = GmProjectDetailReport.new(interval: @interval, project: @project)
     @report.run
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        render_csv(filename: "#{@project.name.gsub(' ', '-').downcase}-timelog", content: @report.to_csv)
+      end
+    end
   end
 
   private
@@ -38,5 +45,27 @@ class GmReportsController < ApplicationController
     end
 
     @interval = GmInterval.new(start: params[:start], finish: params[:finish])
+  end
+
+  def render_csv(options)
+    filename = sanitize_filename("#{options[:filename]}.csv")
+
+    if request.env['HTTP_USER_AGENT'] =~ /msie/i
+      headers['Pragma'] = 'public'
+      headers["Content-type"] = "text/plain"
+      headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
+      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+      headers['Expires'] = "0"
+    else
+      headers["Content-Type"] ||= 'text/csv'
+      headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
+    end
+
+    render(text: options[:content])
+  end
+
+  # Removes any non-filename-safe characters from a string so that it can be used in a filename
+  def sanitize_filename(filename)
+    filename.strip.gsub(/[^0-9A-Za-z.\-]|\s/, '_')
   end
 end
