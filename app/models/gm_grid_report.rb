@@ -23,11 +23,11 @@ class GmGridReport
   # Run main SQL query to get hours per worker and project in the given time period.
   def generate_chunk_data
     self.chunk_data = TimeEntry.
-      includes(:project, :user).
-      select('user_id, project_id, SUM(hours) AS hours').
+      includes(:project, :user, :issue).
+      select('user_id, project_id, issue_id, SUM(hours) AS hours').
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
-      group(:project_id, :user_id)
+      group(:project_id, :user_id, :issue_id)
   end
 
   # Get all users included in chunk_data and sort by name.
@@ -80,12 +80,17 @@ class GmGridReport
     [:revenue, :wage].each do |type|
       chunk_data.each do |datum|
         if type == :revenue
-          rate = datum.user.gm_project_rate(datum.project, interval)
+          # Try to get issue rate, and if that fails, get project rate.
+          datum_rate = datum.user.gm_issue_rate(datum.issue, interval) ||
+            datum.user.gm_project_rate(datum.project, interval)
         else
-          rate = user_wage_rates[datum.user] # This is guaranteed to exist at this point.
+          datum_rate = user_wage_rates[datum.user] # This is guaranteed to exist at this point.
         end
 
-        chunks[type][[datum.user, datum.project]] = GmChunk.new(hours: datum.hours, rate: rate)
+        if datum_rate
+          chunks[type][[datum.user, datum.project]] ||= GmChunk.new
+          chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours, rate: datum_rate)
+        end
       end
     end
   end

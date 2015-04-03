@@ -57,29 +57,42 @@ class GmProjectDetailReport
     subsets = chunk_data.group_by{ |d| d.user.gm_type(interval).internal? ? :sassy : d.user }
 
     # Build the chunks by summing the data.
-    chunk_groups[:sassy] = build_chunks_for_subset(subsets.delete(:sassy) || [])
-    subsets.each{ |user, subset| chunk_groups[user] = build_chunks_for_subset(subset) }
+    chunk_groups[:sassy] = build_chunks_for_subset(:sassy, subsets.delete(:sassy) || [])
+    subsets.each{ |user, subset| chunk_groups[user] = build_chunks_for_subset(user, subset) }
   end
 
-  def build_chunks_for_subset(subset)
+  def build_chunks_for_subset(user, subset)
     [].tap do |chunks|
+      # The subset rate is the project full rate for sassy, and the user project rate otherwise.
+      subset_rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
+
       # A subset is a set of (issue, user, hours) tuples. We want to aggregate by issue, summing the hours.
       subset.group_by(&:issue).each do |issue, datums|
 
-        # For internal users, we multiply the hours by the ratio of the user's rate for the project to the full rate for the project.
         hours = datums.map do |d|
-          full_rate = project.gm_full_rate(interval).val
-          adjustment_factor = if full_rate == 0
-            0
-          elsif !d.user.gm_type(interval).internal?
-            1
+
+          adjustment_factor = if subset_rate == 0
+            0 # Don't div by 0.
+
+          # If user has a special issue rate, compare that against the subset rate.
+          elsif user_issue_rate = d.user.gm_issue_rate(issue, interval).try(:val)
+            user_issue_rate / subset_rate
+
+          # Otherwise if this is sassy, factor is user project rate compared to full rate.
+          # (For contractors, the subset_rate /is/ the project rate)
+          elsif user == :sassy
+            d.user.gm_project_rate(project, interval).val / subset_rate
+
+          # Otherwise there is no need to adjust.
           else
-            d.user.gm_project_rate(project, interval).val / full_rate
+            1
           end
+
           d.hours * adjustment_factor
         end.sum
 
-        chunks << GmChunk.new(issue: issue, hours: hours)
+        chunk = GmChunk.new(issue: issue, hours: hours)
+        chunks << chunk
       end
     end
   end

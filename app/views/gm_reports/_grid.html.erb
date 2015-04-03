@@ -18,7 +18,9 @@
         <td>
           <% if chunk = @report.chunks[grid_type][[user, project]] %>
             <div class="hours"><%= number_with_precision(chunk.hours, precision: 2) %></div>
-            <div class="rate"><%= number_to_currency(chunk.rate.val) %></div>
+            <div class="rate">
+              <%= number_to_currency(chunk.rate.val) %><%= chunk.multiple_rates? ? '*' : '' %>
+            </div>
           <% end %>
         </td>
       <% end %>
@@ -56,3 +58,7 @@
     <td></td>
   </tr>
 </table>
+
+<% if grid_type == :revenue %>
+  * - Indicates multiple rates combined into this figure. Effective rate and actual hours worked are shown.
+<% end %>

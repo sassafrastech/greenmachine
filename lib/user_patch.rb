@@ -14,6 +14,11 @@ module UserPatch
       adjusted || project.gm_full_rate(interval) # User's rate is the full rate if no adjusted rate.
     end
 
+    # Gets the issue rate, if one exists. Returns nil if not.
+    def gm_issue_rate(issue, interval)
+      GmRate.where(kind: 'issue_revenue_adjusted', user_id: id, issue_id: issue.id).last
+    end
+
     def gm_wage_rate(interval)
       if gm_type(interval) && gm_type(interval).name == 'member'
         GmRate.where(kind: 'member_wage_base').last
