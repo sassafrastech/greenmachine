@@ -42,5 +42,9 @@ module UserPatch
     def gm_gross_pto(interval)
       gm_info(interval).has_pto? ? gm_pto_election(interval).val * gm_wage_rate(interval).val * PTO_DAYS_PER_MONTH : nil
     end
+
+    def gm_health_insurance(interval)
+      GmRate.where(kind: 'health_insurance', user_id: id).last
+    end
   end
 end

@@ -73,17 +73,6 @@
 
   <tr>
     <td>
-      Gross PTO Savings
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_to_currency(@report.summaries[:gross_pto].by_user[user]) %></td>
-    <% end %>
-    <td><%= number_to_currency(@report.summaries[:gross_pto].total) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
       Net PTO Savings
     </td>
     <% @report.users.each do |user| %>
@@ -95,6 +84,26 @@
 
   <tr><td>&nbsp;</td></tr>
 
+  <tr>
+    <td>
+      Gross PTO Savings
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_to_currency(@report.summaries[:gross_pto].by_user[user]) %></td>
+    <% end %>
+    <td><%= number_to_currency(@report.summaries[:gross_pto].total) %></td>
+    <td></td>
+  </tr>
 
+  <tr>
+    <td>
+      Health Insurance
+    </td>
+    <% @report.users.each do |user| %>
+      <td><%= number_to_currency(@report.summaries[:health_insurance].by_user[user]) %></td>
+    <% end %>
+    <td><%= number_to_currency(@report.summaries[:health_insurance].total) %></td>
+    <td></td>
+  </tr>
 
 </table>

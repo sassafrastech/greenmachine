@@ -183,6 +183,7 @@ class GmGridReport
 
     # Health insurance
     summary = GmSummary.new
-
+    users.each{ |u| summary.by_user[u] = u.gm_health_insurance(interval).try(:val) }
+    summaries[:health_insurance] = summary
   end
 end
