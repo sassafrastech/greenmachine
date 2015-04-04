@@ -35,12 +35,13 @@ class GmSummary
   def /(other)
     quotient = self.class.new(total_type: :average)
     by_user.keys.each do |u|
-      quotient[u] = if self[u].nil? && other[u].nil?
+      _other = other.is_a?(Numeric) ? other : other[u]
+      quotient[u] = if self[u].nil? && _other.nil?
         nil
-      elsif (other[u] || 0) == 0
+      elsif (_other || 0) == 0
         0
       else
-        (self[u] || 0) / other[u]
+        (self[u] || 0) / _other
       end
     end
     quotient
@@ -49,7 +50,8 @@ class GmSummary
   def *(other)
     product = self.class.new
     by_user.keys.each do |u|
-      product[u] = self[u].nil? && other[u].nil? ? nil : (self[u] || 0) * (other[u] || 0)
+      _other = other.is_a?(Numeric) ? other : other[u]
+      product[u] = self[u].nil? && _other.nil? ? nil : (self[u] || 0) * (_other || 0)
     end
     product
   end
@@ -59,6 +61,6 @@ class GmSummary
   end
 
   def []=(user, val)
-    by_user[user] = val
+    by_user[user] = val == 0 ? nil : val
   end
 end

@@ -173,9 +173,25 @@ class GmGridReport
       users.each{ |u| s[u] = u.gm_info(interval).payroll_tax? ? summaries[:wage][u] * payroll_tax_rate : nil }
     end
 
+    # Hours worked by internal folks.
+    summaries[:worker_hours] = GmSummary.new.tap do |s|
+      users.each{ |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:hours] : nil }
+    end
+
+    summaries[:worker_hours_share] = summaries[:worker_hours] / summaries[:worker_hours].total
+
+    summaries[:general_expenses_share] = summaries[:worker_hours_share] * general_expenses
+
+    summaries[:total_expenses] = [:gross_pto, :health_insurance, :payroll_tax, :general_expenses_share].map{ |k| summaries[k]}.sum
+
+    summaries[:rev_exp_wage] = summaries[:revenue] / (summaries[:total_expenses] + summaries[:wage])
   end
 
   def payroll_tax_rate
     GmRate.where(kind: 'payroll_tax_pct').last.try(:val).try(:/, 100) || 0
+  end
+
+  def general_expenses
+    GmRate.where(kind: 'general_expenses').last.try(:val) || 0
   end
 end
