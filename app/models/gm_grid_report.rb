@@ -132,58 +132,41 @@ class GmGridReport
   def calculate_summaries
     self.summaries = {}
 
-    # Rev/wage
-    summary = GmSummary.new(total_type: :average)
-    users.each do |u|
-      rev = totals[:revenue][:by_user][u][:dollars]
-      wage = totals[:wage][:by_user][u][:dollars]
-      summary.by_user[u] = wage == 0 ? 0 : rev / wage
+    summaries[:revenue] = GmSummary.new.tap do |s|
+      users.each { |u| s[u] = totals[:revenue][:by_user][u][:dollars] }
     end
-    summaries[:rev_wage] = summary
 
-    # PTO Hours Claimed (PTO chunks still get generated even though not shown in main grid)
-    summary = GmSummary.new
-    users.each{ |u| summary.by_user[u] = chunks[:wage][[u, pto_proj]].try(:hours) }
-    summaries[:pto_hours_claimed] = summary
-
-    # PTO Dollars Claimed
-    summary = GmSummary.new
-    users.each do |u|
-      hours = summaries[:pto_hours_claimed].by_user[u]
-      summary.by_user[u] = hours * u.gm_wage_rate(interval).val unless hours.nil?
+    summaries[:wage] = GmSummary.new.tap do |s|
+      users.each { |u| s[u] = totals[:wage][:by_user][u][:dollars] }
     end
-    summaries[:pto_dollars_claimed] = summary
 
-    # Wages inlcuding PTO
-    summary = GmSummary.new
-    users.each do |u|
-      summary.by_user[u] = totals[:wage][:by_user][u][:dollars] +
-        (summaries[:pto_hours_claimed].by_user[u] || 0) * u.gm_wage_rate(interval).val
+    summaries[:wage_rate] = GmSummary.new.tap do |s|
+      users.each { |u| s[u] = u.gm_wage_rate(interval).val }
     end
-    summaries[:wages_incl_pto] = summary
 
-    # PTO election
-    summary = GmSummary.new
-    users.each{ |u| summary.by_user[u] = u.gm_pto_election(interval).try(:val) }
-    summaries[:pto_election] = summary
+    summaries[:rev_wage] = summaries[:revenue] / summaries[:wage]
 
-    # Gross PTO
-    summary = GmSummary.new
-    users.each{ |u| summary.by_user[u] = u.gm_gross_pto(interval) }
-    summaries[:gross_pto] = summary
-
-    # Net PTO
-    summary = GmSummary.new
-    users.each do |u|
-      claimed_hours = summaries[:pto_hours_claimed].by_user[u] || 0
-      claimed_dollars = claimed_hours * u.gm_wage_rate(interval).val
-      summary.by_user[u] = (summaries[:gross_pto].by_user[u] || 0) - claimed_dollars
+    # PTO chunks still get generated even though not shown in main grid
+    summaries[:pto_hours_claimed] = GmSummary.new.tap do |s|
+      users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:hours) }
     end
-    summaries[:net_pto] = summary
 
-    # Health insurance
-    summary = GmSummary.new
-    users.each{ |u| summary.by_user[u] = u.gm_health_insurance(interval).try(:val) }
-    summaries[:health_insurance] = summary
+    summaries[:pto_dollars_claimed] = summaries[:pto_hours_claimed] * summaries[:wage_rate]
+
+    summaries[:wages_incl_pto] = summaries[:wage] + summaries[:pto_dollars_claimed]
+
+    summaries[:pto_election] = GmSummary.new.tap do |s|
+      users.each{ |u| s[u] = u.gm_pto_election(interval).try(:val) }
+    end
+
+    summaries[:gross_pto] = GmSummary.new.tap do |s|
+      users.each{ |u| s[u] = u.gm_gross_pto(interval) }
+    end
+
+    summaries[:net_pto] = summaries[:gross_pto] - summaries[:pto_dollars_claimed]
+
+    summaries[:health_insurance] = GmSummary.new.tap do |s|
+      users.each{ |u| s[u] = u.gm_health_insurance(interval).try(:val) }
+    end
   end
 end

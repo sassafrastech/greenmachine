@@ -1,109 +1,21 @@
 <table>
   <%= render('grid_header', grid_type: :summary) %>
 
-  <% [:revenue, :wage].each do |type| %>
-    <tr>
-      <td>
-        Total <%= type.to_s.capitalize %>
-      </td>
-      <% @report.users.each do |user| %>
-        <td><%= number_to_currency(@report.totals[type][:by_user][user][:dollars]) %></td>
-      <% end %>
-      <td><%= number_to_currency(@report.totals[type][:dollars]) %></td>
-      <td></td>
-    </tr>
-  <% end %>
-
-  <tr>
-    <td>
-      Revenue/Wage Ratio
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_with_precision(@report.summaries[:rev_wage].by_user[user], precision: 2) %></td>
-    <% end %>
-    <td><%= number_with_precision(@report.summaries[:rev_wage].total, precision: 2) %></td>
-    <td></td>
-  </tr>
+  <%= render('summary_row', name: 'Total Revenue', key: :revenue, type: :currency) %>
+  <%= render('summary_row', name: 'Total Wages', key: :wage, type: :currency) %>
+  <%= render('summary_row', name: 'Revenue/Wage Ratio', key: :rev_wage, type: :float) %>
 
   <tr><td>&nbsp;</td></tr>
 
-  <tr>
-    <td>
-      PTO Hours Claimed
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_with_precision(@report.summaries[:pto_hours_claimed].by_user[user], precision: 2) %></td>
-    <% end %>
-    <td><%= number_with_precision(@report.summaries[:pto_hours_claimed].total, precision: 2) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
-      PTO Dollars Claimed
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_to_currency(@report.summaries[:pto_dollars_claimed].by_user[user]) %></td>
-    <% end %>
-    <td><%= number_to_currency(@report.summaries[:pto_dollars_claimed].total) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
-      Wages Including PTO
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_to_currency(@report.summaries[:wages_incl_pto].by_user[user]) %></td>
-    <% end %>
-    <td><%= number_to_currency(@report.summaries[:wages_incl_pto].total) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
-      PTO Hours/Day
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_with_precision(@report.summaries[:pto_election].by_user[user], precision: 2) %></td>
-    <% end %>
-    <td><%= number_with_precision(@report.summaries[:pto_election].total, precision: 2) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
-      Net PTO Savings
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_to_currency(@report.summaries[:net_pto].by_user[user]) %></td>
-    <% end %>
-    <td><%= number_to_currency(@report.summaries[:net_pto].total) %></td>
-    <td></td>
-  </tr>
+  <%= render('summary_row', name: 'PTO Hours Claimed', key: :pto_hours_claimed, type: :float) %>
+  <%= render('summary_row', name: 'PTO Dollars Claimed', key: :pto_dollars_claimed, type: :currency) %>
+  <%= render('summary_row', name: 'Wages Including PTO', key: :wages_incl_pto, type: :currency) %>
+  <%= render('summary_row', name: 'PTO Hours/Day', key: :pto_election, type: :float) %>
+  <%= render('summary_row', name: 'Net PTO Savings', key: :net_pto, type: :dollars) %>
 
   <tr><td>&nbsp;</td></tr>
 
-  <tr>
-    <td>
-      Gross PTO Savings
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_to_currency(@report.summaries[:gross_pto].by_user[user]) %></td>
-    <% end %>
-    <td><%= number_to_currency(@report.summaries[:gross_pto].total) %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>
-      Health Insurance
-    </td>
-    <% @report.users.each do |user| %>
-      <td><%= number_to_currency(@report.summaries[:health_insurance].by_user[user]) %></td>
-    <% end %>
-    <td><%= number_to_currency(@report.summaries[:health_insurance].total) %></td>
-    <td></td>
-  </tr>
+  <%= render('summary_row', name: 'Gross PTO Savings', key: :gross_pto, type: :currency) %>
+  <%= render('summary_row', name: 'Health Insurance', key: :health_insurance, type: :currency) %>
 
 </table>

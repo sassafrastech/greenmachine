@@ -16,12 +16,49 @@ class GmSummary
     @total
   end
 
+  def +(other)
+    sum = self.class.new
+    by_user.keys.each do |u|
+      sum[u] = self[u].nil? && other[u].nil? ? nil : (self[u] || 0) + (other[u] || 0)
+    end
+    sum
+  end
+
   def -(other)
     diff = self.class.new(total_type: total_type)
     by_user.keys.each do |u|
-      d = (by_user[u] || 0) - (other.by_user[u] || 0)
-      diff.by_user[u] = d == 0 ? nil : d
+      diff[u] = self[u].nil? && other[u].nil? ? nil : (self[u] || 0) - (other[u] || 0)
     end
     diff
+  end
+
+  def /(other)
+    quotient = self.class.new(total_type: :average)
+    by_user.keys.each do |u|
+      quotient[u] = if self[u].nil? && other[u].nil?
+        nil
+      elsif (other[u] || 0) == 0
+        0
+      else
+        (self[u] || 0) / other[u]
+      end
+    end
+    quotient
+  end
+
+  def *(other)
+    product = self.class.new
+    by_user.keys.each do |u|
+      product[u] = self[u].nil? && other[u].nil? ? nil : (self[u] || 0) * (other[u] || 0)
+    end
+    product
+  end
+
+  def [](user)
+    by_user[user]
+  end
+
+  def []=(user, val)
+    by_user[user] = val
   end
 end
