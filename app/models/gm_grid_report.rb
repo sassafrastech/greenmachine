@@ -141,6 +141,27 @@ class GmGridReport
     end
     summaries[:rev_wage] = summary
 
+    # PTO Hours Claimed (PTO chunks still get generated even though not shown in main grid)
+    summary = GmSummary.new
+    users.each{ |u| summary.by_user[u] = chunks[:wage][[u, pto_proj]].try(:hours) }
+    summaries[:pto_hours_claimed] = summary
+
+    # PTO Dollars Claimed
+    summary = GmSummary.new
+    users.each do |u|
+      hours = summaries[:pto_hours_claimed].by_user[u]
+      summary.by_user[u] = hours * u.gm_wage_rate(interval).val unless hours.nil?
+    end
+    summaries[:pto_dollars_claimed] = summary
+
+    # Wages inlcuding PTO
+    summary = GmSummary.new
+    users.each do |u|
+      summary.by_user[u] = totals[:wage][:by_user][u][:dollars] +
+        (summaries[:pto_hours_claimed].by_user[u] || 0) * u.gm_wage_rate(interval).val
+    end
+    summaries[:wages_incl_pto] = summary
+
     # PTO election
     summary = GmSummary.new
     users.each{ |u| summary.by_user[u] = u.gm_pto_election(interval).try(:val) }
@@ -151,26 +172,17 @@ class GmGridReport
     users.each{ |u| summary.by_user[u] = u.gm_gross_pto(interval) }
     summaries[:gross_pto] = summary
 
-    # PTO Claimed (PTO chunks still get generated even though not shown in main grid)
-    summary = GmSummary.new
-    users.each{ |u| summary.by_user[u] = chunks[:wage][[u, pto_proj]].try(:hours) }
-    summaries[:pto_claimed] = summary
-
     # Net PTO
     summary = GmSummary.new
     users.each do |u|
-      claimed_hours = summaries[:pto_claimed].by_user[u] || 0
+      claimed_hours = summaries[:pto_hours_claimed].by_user[u] || 0
       claimed_dollars = claimed_hours * u.gm_wage_rate(interval).val
       summary.by_user[u] = (summaries[:gross_pto].by_user[u] || 0) - claimed_dollars
     end
     summaries[:net_pto] = summary
 
-    # Wages inlcuding PTO
+    # Health insurance
     summary = GmSummary.new
-    users.each do |u|
-      summary.by_user[u] = totals[:wage][:by_user][u][:dollars] +
-        (summaries[:pto_claimed].by_user[u] || 0) * u.gm_wage_rate(interval).val
-    end
-    summaries[:wages_incl_pto] = summary
+
   end
 end
