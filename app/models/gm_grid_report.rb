@@ -168,5 +168,14 @@ class GmGridReport
     summaries[:health_insurance] = GmSummary.new.tap do |s|
       users.each{ |u| s[u] = u.gm_health_insurance(interval).try(:val) }
     end
+
+    summaries[:payroll_tax] = GmSummary.new.tap do |s|
+      users.each{ |u| s[u] = u.gm_info(interval).payroll_tax? ? summaries[:wage][u] * payroll_tax_rate : nil }
+    end
+
+  end
+
+  def payroll_tax_rate
+    GmRate.where(kind: 'payroll_tax_pct').last.try(:val).try(:/, 100) || 0
   end
 end
