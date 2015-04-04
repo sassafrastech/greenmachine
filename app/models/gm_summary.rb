@@ -9,10 +9,14 @@ class GmSummary
   end
 
   def total
-    return @total if @total
-    non_nil = by_user.values.reject(&:nil?)
-    @total = non_nil.sum
-    @total /= non_nil.size if total_type == :average && !non_nil.empty?
+    return @total if defined?(@total)
+    if total_type == :none
+      @total = nil
+    else
+      non_nil = by_user.values.reject(&:nil?)
+      @total = non_nil.sum
+      @total /= non_nil.size if total_type == :average && !non_nil.empty?
+    end
     @total
   end
 

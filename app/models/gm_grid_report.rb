@@ -187,6 +187,7 @@ class GmGridReport
     summaries[:surplus] = summaries[:revenue] - summaries[:total_expenses] - summaries[:wage]
 
     summaries[:rev_exp_wage] = summaries[:revenue] / (summaries[:total_expenses] + summaries[:wage])
+    summaries[:rev_exp_wage].total_type = :none
   end
 
   def payroll_tax_rate
