@@ -1,7 +1,9 @@
 # Stores the user's type for GreenMachine purposes.
-class GmUserType < ActiveRecord::Base
+class GmUserInfo < ActiveRecord::Base
   unloadable
   belongs_to :user
+
+  self.table_name = 'gm_user_info'
 
   # We can't use Redmine's permission system for this since it's project-based only.
   # For now anybody that has a user type can see the system.
@@ -14,11 +16,11 @@ class GmUserType < ActiveRecord::Base
   end
 
   def active?
-    name != 'inactive'
+    user_type != 'inactive'
   end
 
   def internal?
-    %w(member employee).include?(name)
+    %w(member employee).include?(user_type)
   end
 
   def has_pto?

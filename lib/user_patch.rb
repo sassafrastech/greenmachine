@@ -20,19 +20,19 @@ module UserPatch
     end
 
     def gm_wage_rate(interval)
-      if gm_type(interval) && gm_type(interval).name == 'member'
+      if gm_info(interval) && gm_info(interval).user_type == 'member'
         GmRate.where(kind: 'member_wage_base').last
       else
         GmRate.where(kind: 'user_wage_base', user_id: id).last
       end
     end
 
-    def gm_type(interval)
-      GmUserType.where(user_id: id).last
+    def gm_info(interval)
+      GmUserInfo.where(user_id: id).last
     end
 
     def gm_pto_election(interval)
-      if %w(member employee).include?(gm_type(interval).name)
+      if gm_info(interval).internal?
         GmRate.where(kind: 'user_pto_election', user_id: id).last
       else
         nil
@@ -40,7 +40,7 @@ module UserPatch
     end
 
     def gm_gross_pto(interval)
-      gm_type(interval).has_pto? ? gm_pto_election(interval).val * gm_wage_rate(interval).val * PTO_DAYS_PER_MONTH : nil
+      gm_info(interval).has_pto? ? gm_pto_election(interval).val * gm_wage_rate(interval).val * PTO_DAYS_PER_MONTH : nil
     end
   end
 end

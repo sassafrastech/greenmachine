@@ -37,7 +37,7 @@ class GmReportsController < ApplicationController
   private
 
   def authorize
-    unless GmUserType.can_view?(User.current)
+    unless GmUserInfo.can_view?(User.current)
       @error = "Unauthorized."
       render :show
     end

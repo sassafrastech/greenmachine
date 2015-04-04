@@ -33,7 +33,7 @@ class GmGridReport
   # Get all users included in chunk_data and sort by name.
   def extract_users
     self.users = chunk_data.map(&:user).uniq.sort_by(&:name)
-    self.user_types = Hash[*users.map{ |u| [u, u.gm_type(interval)] }.flatten]
+    self.user_types = Hash[*users.map{ |u| [u, u.gm_info(interval)] }.flatten]
     self.user_wage_rates = Hash[*users.map{ |u| [u, u.gm_wage_rate(interval)] }.flatten]
 
     no_type = users.select{ |u| user_types[u].nil? }
@@ -48,7 +48,7 @@ class GmGridReport
       self.warnings << "The following users had hours but no base wage rate: #{no_rate.map(&:name).join(', ')}"
     end
 
-    no_pto_election = users.select{ |u| u.gm_type(interval).has_pto? && u.gm_pto_election(interval).nil? }
+    no_pto_election = users.select{ |u| u.gm_info(interval).has_pto? && u.gm_pto_election(interval).nil? }
     self.users -= no_pto_election
     unless no_pto_election.empty?
       self.warnings << "The following users had hours but no PTO election: #{no_pto_election.map(&:name).join(', ')}"

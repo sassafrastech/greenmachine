@@ -3,7 +3,7 @@
   <% @report.users.each do |user| %>
     <th>
       <div class="name"><%= user.firstname %></div>
-      <div class="type"><%= @report.user_types[user].name.capitalize %></div>
+      <div class="type"><%= @report.user_types[user].user_type.capitalize %></div>
     </th>
   <% end %>
   <th>Total<%= grid_type == :summary ? '' : ' Hours' %></th>

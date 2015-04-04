@@ -18,7 +18,7 @@ Redmine::Plugin.register :greenmachine do
   author_url 'http://sassafras.coop/about'
 
   menu :top_menu, :polls, { controller: 'gm_reports', action: 'show' },
-    caption: 'GreenMachine', if: -> (x) { GmUserType.can_view?(User.current) }
+    caption: 'GreenMachine', if: -> (x) { GmUserInfo.can_view?(User.current) }
 end
 
 $qb_oauth_consumer = OAuth::Consumer.new(QB_KEY, QB_SECRET, {

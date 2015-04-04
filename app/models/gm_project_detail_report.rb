@@ -51,10 +51,10 @@ class GmProjectDetailReport
     self.chunk_groups = {}
 
     # Remove any data for users with no type.
-    chunk_data.reject!{ |d| d.user.gm_type(interval).nil? }
+    chunk_data.reject!{ |d| d.user.gm_info(interval).nil? }
 
     # Group the data by user, or :sassy if internal.
-    subsets = chunk_data.group_by{ |d| d.user.gm_type(interval).internal? ? :sassy : d.user }
+    subsets = chunk_data.group_by{ |d| d.user.gm_info(interval).internal? ? :sassy : d.user }
 
     # Build the chunks by summing the data.
     chunk_groups[:sassy] = build_chunks_for_subset(:sassy, subsets.delete(:sassy) || [])
