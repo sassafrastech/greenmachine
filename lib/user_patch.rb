@@ -10,35 +10,35 @@ module UserPatch
   module InstanceMethods
     # Gets the GmRate for this user for the given project, over the given interval.
     def gm_project_rate(project, interval)
-      adjusted = GmRate.where(kind: 'project_revenue_adjusted', user_id: id, project_id: project.id).last
+      adjusted = GmRate.applicable_to(interval).where(kind: 'project_revenue_adjusted', user_id: id, project_id: project.id).last
       adjusted || project.gm_full_rate(interval) # User's rate is the full rate if no adjusted rate.
     end
 
     def gm_project_wage_rate(project, interval)
-      GmRate.where(kind: 'project_wage_base', project_id: project.id).last ||
+      GmRate.applicable_to(interval).where(kind: 'project_wage_base', project_id: project.id).last ||
         gm_wage_rate(interval)
     end
 
     # Gets the issue rate, if one exists. Returns nil if not.
     def gm_issue_rate(issue, interval)
-      GmRate.where(kind: 'issue_revenue_adjusted', user_id: id, issue_id: issue.id).last
+      GmRate.applicable_to(interval).where(kind: 'issue_revenue_adjusted', user_id: id, issue_id: issue.id).last
     end
 
     def gm_wage_rate(interval)
       if gm_info(interval) && gm_info(interval).user_type == 'member'
-        GmRate.where(kind: 'member_wage_base').last
+        GmRate.applicable_to(interval).where(kind: 'member_wage_base').last
       else
-        GmRate.where(kind: 'user_wage_base', user_id: id).last
+        GmRate.applicable_to(interval).where(kind: 'user_wage_base', user_id: id).last
       end
     end
 
     def gm_info(interval)
-      GmUserInfo.where(user_id: id).last
+      GmUserInfo.where(user_id: id).applicable_to(interval).last
     end
 
     def gm_pto_election(interval)
       if gm_info(interval).internal?
-        GmRate.where(kind: 'user_pto_election', user_id: id).last
+        GmRate.applicable_to(interval).where(kind: 'user_pto_election', user_id: id).last
       else
         nil
       end
@@ -49,7 +49,7 @@ module UserPatch
     end
 
     def gm_health_insurance(interval)
-      GmRate.where(kind: 'health_insurance', user_id: id).last
+      GmRate.applicable_to(interval).where(kind: 'health_insurance', user_id: id).last
     end
   end
 end

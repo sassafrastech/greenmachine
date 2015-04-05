@@ -9,7 +9,7 @@ ActionDispatch::Callbacks.to_prepare do
   Project.send(:include, ProjectPatch) unless Project.included_modules.include? ProjectPatch
 end
 
-Redmine::Plugin.register :greenmachine do
+gm = Redmine::Plugin.register :greenmachine do
   name 'Sassafras Green Machine'
   author 'Tom Smyth'
   description 'Sassafras Billing Plugin'
@@ -20,6 +20,8 @@ Redmine::Plugin.register :greenmachine do
   menu :top_menu, :polls, { controller: 'gm_reports', action: 'show' },
     caption: 'GreenMachine', if: -> (x) { GmUserInfo.can_view?(User.current) }
 end
+
+ActiveSupport::Dependencies.autoload_paths << "#{gm.directory}/app/models/concerns"
 
 $qb_oauth_consumer = OAuth::Consumer.new(QB_KEY, QB_SECRET, {
   :site                 => "https://oauth.intuit.com",

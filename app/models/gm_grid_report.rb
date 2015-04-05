@@ -195,10 +195,10 @@ class GmGridReport
   end
 
   def payroll_tax_rate
-    GmRate.where(kind: 'payroll_tax_pct').last.try(:val).try(:/, 100) || 0
+    GmRate.where(kind: 'payroll_tax_pct').applicable_to(interval).last.try(:val).try(:/, 100) || 0
   end
 
   def general_expenses
-    GmRate.where(kind: 'general_expenses').last.try(:val) || 0
+    GmRate.where(kind: 'general_expenses').applicable_to(interval).last.try(:val) || 0
   end
 end

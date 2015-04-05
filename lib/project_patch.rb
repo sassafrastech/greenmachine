@@ -11,7 +11,7 @@ module ProjectPatch
       if name == 'Sassafras Internal'
         GmRate.new(val: 0)
       else
-        GmRate.where(kind: 'project_revenue_full', project_id: id).last
+        GmRate.where(kind: 'project_revenue_full', project_id: id).applicable_to(interval).last
       end
     end
   end

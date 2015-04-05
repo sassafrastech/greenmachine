@@ -1,6 +1,8 @@
 # Stores the user's type for GreenMachine purposes.
 class GmUserInfo < ActiveRecord::Base
   unloadable
+  include GmIntervalSearchable
+
   belongs_to :user
 
   self.table_name = 'gm_user_info'
@@ -12,7 +14,7 @@ class GmUserInfo < ActiveRecord::Base
   end
 
   def self.current_for(user)
-    where(user_id: user.id).first
+    where(user_id: user.id).applicable_to(GmInterval.new(start: Date.today, finish: Date.today)).last
   end
 
   def active?
