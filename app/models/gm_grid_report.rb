@@ -41,6 +41,8 @@ class GmGridReport
       self.warnings << "The following users had hours but no user type: #{no_type.map(&:name).join(', ')}"
     end
 
+    users.reject!{ |u| u.gm_info(interval).ignore? }
+
     no_rate = users.select{ |u| u.gm_wage_rate(interval).nil? }
     self.users -= no_rate
     unless no_rate.empty?

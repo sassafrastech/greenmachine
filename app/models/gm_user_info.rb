@@ -23,6 +23,10 @@ class GmUserInfo < ActiveRecord::Base
     %w(member employee).include?(user_type)
   end
 
+  def ignore?
+    user_type == 'ignore'
+  end
+
   def payroll_tax?
     user_type == 'employee'
   end
