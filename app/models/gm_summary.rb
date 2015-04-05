@@ -1,11 +1,13 @@
 # Represents a summary row in the main grid.
 class GmSummary
-  attr_accessor :by_user, :total_type
+  attr_accessor :by_user, :total_type, :show_zero
+  alias_method :show_zero?, :show_zero
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
     self.total_type ||= :sum
     self.by_user = {}
+    self.show_zero = false
   end
 
   def total
@@ -61,10 +63,10 @@ class GmSummary
   end
 
   def [](user)
-    by_user[user]
+    by_user[user] == 0 && !show_zero? ? nil : by_user[user]
   end
 
   def []=(user, val)
-    by_user[user] = val == 0 ? nil : val
+    by_user[user] = val
   end
 end

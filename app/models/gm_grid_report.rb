@@ -145,6 +145,8 @@ class GmGridReport
     end
 
     summaries[:rev_wage] = summaries[:revenue] / summaries[:wage]
+    summaries[:rev_wage].total_type = :none
+    summaries[:rev_wage].show_zero = true
 
     # PTO chunks still get generated even though not shown in main grid
     summaries[:pto_hours_claimed] = GmSummary.new.tap do |s|
@@ -188,6 +190,7 @@ class GmGridReport
 
     summaries[:rev_exp_wage] = summaries[:revenue] / (summaries[:total_expenses] + summaries[:wage])
     summaries[:rev_exp_wage].total_type = :none
+    summaries[:rev_exp_wage].show_zero = true
   end
 
   def payroll_tax_rate

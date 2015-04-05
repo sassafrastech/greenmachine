@@ -4,7 +4,7 @@
     <%= name %>
   </td>
   <% @report.users.each do |user| %>
-    <td><%= send(func, @report.summaries[key].by_user[user], precision: 2) %></td>
+    <td><%= send(func, @report.summaries[key][user], precision: 2) %></td>
   <% end %>
   <td><%= send(func, @report.summaries[key].total, precision: 2) %></td>
   <td></td>
