@@ -34,7 +34,6 @@ class GmGridReport
   def extract_users
     self.users = chunk_data.map(&:user).uniq.sort_by(&:name)
     self.user_types = Hash[*users.map{ |u| [u, u.gm_info(interval)] }.flatten]
-    self.user_wage_rates = Hash[*users.map{ |u| [u, u.gm_wage_rate(interval)] }.flatten]
 
     no_type = users.select{ |u| user_types[u].nil? }
     self.users -= no_type
@@ -42,7 +41,7 @@ class GmGridReport
       self.warnings << "The following users had hours but no user type: #{no_type.map(&:name).join(', ')}"
     end
 
-    no_rate = users.select{ |u| user_wage_rates[u].nil? }
+    no_rate = users.select{ |u| u.gm_wage_rate(interval).nil? }
     self.users -= no_rate
     unless no_rate.empty?
       self.warnings << "The following users had hours but no base wage rate: #{no_rate.map(&:name).join(', ')}"
@@ -84,7 +83,7 @@ class GmGridReport
           datum_rate = datum.user.gm_issue_rate(datum.issue, interval) ||
             datum.user.gm_project_rate(datum.project, interval)
         else
-          datum_rate = user_wage_rates[datum.user] # This is guaranteed to exist at this point.
+          datum_rate = datum.user.gm_project_wage_rate(datum.project, interval)
         end
 
         if datum_rate
