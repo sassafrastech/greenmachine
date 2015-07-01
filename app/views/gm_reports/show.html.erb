@@ -1,3 +1,8 @@
+<form id="report-jump-form">
+  <%= date_select('j', 'd', order: [:month, :year], start_year: 2014, default: params[:start]) %>
+  <%= submit_tag('Go') %>
+</form>
+
 <h1>GreenMachine Report</h1>
 
 <% if @date_error %>
@@ -29,3 +34,26 @@
   <%= render('summary_grid') %>
 
 <% end %>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'main', plugin: 'greenmachine' %>
+<% end %>
+
+<script type="text/javascript">
+  var month_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  $(document).ready(function(){
+    $('#report-jump-form').on('submit', function(e){
+      e.preventDefault();
+      var year = parseInt($('#j_d_1i').val());
+      var month = parseInt($('#j_d_2i').val());
+
+      if (year == 2014 && month < 10)
+        alert("No data for that month");
+      else {
+        var start = "" + year + (month < 10 ? '0' : '') + month + '01';
+        var end = "" + year + (month < 10 ? '0' : '') + month + month_days[month - 1];
+        window.location.href = "/green-machine/reports/" + start + "/" + end;
+      }
+    });
+  });
+</script>

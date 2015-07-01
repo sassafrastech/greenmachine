@@ -1,0 +1,8 @@
+#report-jump-form {
+  float: right;
+}
+
+#report-jump-form input[type=submit] {
+  height: 26px;
+  line-height: 5px;
+}
