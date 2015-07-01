@@ -28,7 +28,8 @@ class GmInvoiceCreator
 
       line_item = Quickbooks::Model::InvoiceLineItem.new
       line_item.amount = rate * hours
-      line_item.description = user == :sassy ? 'Sassafras hours' : "#{user.name} hours"
+      line_item.description = "#{project.name}: "
+      line_item.description << (user == :sassy ? 'Sassafras hours' : "#{user.name} hours")
       line_item.sales_item! do |detail|
         detail.unit_price = rate
         detail.quantity = hours
