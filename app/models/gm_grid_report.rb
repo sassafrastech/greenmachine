@@ -13,6 +13,7 @@ class GmGridReport
     generate_chunk_data
     extract_users
     extract_projects
+    check_chunks_for_issues
     build_chunks
     calculate_totals
     calculate_summaries
@@ -56,6 +57,17 @@ class GmGridReport
     end
   end
 
+  def check_chunks_for_issues
+    projs = []
+    chunk_data.each do |datum|
+      projs << datum.project if datum.issue.blank?
+    end
+    projs.uniq!
+    unless projs.empty?
+      self.warnings << "The following projects had time entries with no associated issue: #{projs.map(&:name).join(', ')}"
+    end
+  end
+
   # Get all projects included in chunk_data and sort by name.
   def extract_projects
     self.projects = chunk_data.map(&:project).uniq.sort_by(&:name)
@@ -82,7 +94,7 @@ class GmGridReport
       chunk_data.each do |datum|
         if type == :revenue
           # Try to get issue rate, and if that fails, get project rate.
-          datum_rate = datum.user.gm_issue_rate(datum.issue, interval) ||
+          datum_rate = datum.issue && datum.user.gm_issue_rate(datum.issue, interval) ||
             datum.user.gm_project_rate(datum.project, interval)
         else
           datum_rate = datum.user.gm_project_wage_rate(datum.project, interval)
