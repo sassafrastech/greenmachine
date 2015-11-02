@@ -25,10 +25,14 @@ module UserPatch
     end
 
     def gm_wage_rate(interval)
-      if gm_info(interval) && gm_info(interval).user_type == 'member'
+      # If there is a user_wage_base rate for this user and val is not nil, use it.
+      user_rate = GmRate.applicable_to(interval).where(kind: 'user_wage_base', user_id: id).last
+      if user_rate && !user_rate.val.nil?
+        user_rate
+      elsif gm_info(interval) && gm_info(interval).user_type == 'member'
         GmRate.applicable_to(interval).where(kind: 'member_wage_base').last
       else
-        GmRate.applicable_to(interval).where(kind: 'user_wage_base', user_id: id).last
+        nil
       end
     end
 
