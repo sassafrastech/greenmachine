@@ -92,14 +92,8 @@ class GmGridReport
   def build_chunks
     [:revenue, :wage].each do |type|
       chunk_data.each do |datum|
-        if type == :revenue
-          # Try to get issue rate, and if that fails, get project rate.
-          datum_rate = datum.issue && datum.user.gm_issue_rate(datum.issue, interval) ||
-            datum.user.gm_project_rate(datum.project, interval)
-        else
-          datum_rate = datum.user.gm_project_wage_rate(datum.project, interval)
-        end
-
+        datum_rate = GmRateFinder.find(type, interval,
+          user: datum.user, project: datum.project, issue: datum.issue)
         if datum_rate
           chunks[type][[datum.user, datum.project]] ||= GmChunk.new
           chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours, rate: datum_rate)
@@ -207,10 +201,10 @@ class GmGridReport
   end
 
   def payroll_tax_rate
-    GmRate.where(kind: 'payroll_tax_pct').applicable_to(interval).last.try(:val).try(:/, 100) || 0
+    GmRateFinder.find('payroll_tax_pct', interval).try(:val).try(:/, 100) || 0
   end
 
   def general_expenses
-    GmRate.where(kind: 'general_expenses').applicable_to(interval).last.try(:val) || 0
+    GmRateFinder.find('general_expenses', interval).try(:val) || 0
   end
 end
