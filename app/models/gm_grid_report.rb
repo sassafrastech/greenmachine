@@ -199,10 +199,13 @@ class GmGridReport
     summaries[:rev_exp_wage].total_type = :none
     summaries[:rev_exp_wage].show_zero = true
 
+    # Hours worked per day/week
     days_in_period = interval.finish - interval.start + 1
     weeks_in_period = days_in_period / 365 * 52
     summaries[:hours_per_week] = (summaries[:worker_hours] + summaries[:pto_hours_claimed]) / weeks_in_period
+    summaries[:hours_per_week].total_type = :sum
     summaries[:hours_per_day] = summaries[:hours_per_week] / 5
+    summaries[:hours_per_day].total_type = :sum
   end
 
   def payroll_tax_rate
