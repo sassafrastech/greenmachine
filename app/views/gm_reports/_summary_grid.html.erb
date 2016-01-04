@@ -13,14 +13,17 @@
   <%= render('summary_row', name: 'PTO Hours/Day', key: :pto_election, type: :float) %>
   <%= render('summary_row', name: 'Actual Hours/Day', key: :hours_per_day, type: :float) %>
   <%= render('summary_row', name: 'Actual Hours/Week', key: :hours_per_week, type: :float) %>
-  <%= render('summary_row', name: 'Net PTO Savings', key: :net_pto, type: :dollars) %>
 
   <tr><td>&nbsp;</td></tr>
 
+  <%= render('summary_row', name: 'Net PTO Savings', key: :net_pto, type: :dollars) %>
   <%= render('summary_row', name: 'Gross PTO Savings', key: :gross_pto, type: :currency) %>
-  <%= render('summary_row', name: 'Health Insurance', key: :health_insurance, type: :currency) %>
-  <%= render('summary_row', name: 'Payroll Tax', key: :payroll_tax, type: :currency) %>
+
+  <tr><td>&nbsp;</td></tr>
+
   <% if params[:opts] == "surplus" %>
+    <%= render('summary_row', name: 'Health Insurance', key: :health_insurance, type: :currency) %>
+    <%= render('summary_row', name: 'Payroll Tax', key: :payroll_tax, type: :currency) %>
     <%= render('summary_row', name: 'Share of General Expenses', key: :general_expenses_share, type: :currency) %>
     <%= render('summary_row', name: 'Total Expenses', key: :total_expenses, type: :currency) %>
     <%= render('summary_row', name: 'Total Surplus', key: :surplus, type: :currency) %>
