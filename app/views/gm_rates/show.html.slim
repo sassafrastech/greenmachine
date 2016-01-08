@@ -1,5 +1,10 @@
 p#notice = notice
 
+table
+  - GmRate::DISPLAY_FIELDS.each do |field|
+    tr
+      td: b #{field.humanize}:
+      td = @gm_rate.send(field)
 
 = link_to 'Edit', edit_gm_rate_path(@gm_rate)
 '|

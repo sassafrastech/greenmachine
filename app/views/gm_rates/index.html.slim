@@ -3,13 +3,8 @@ h1 Listing gm_rates
 table
   thead
     tr
-      th Kind
-      th User
-      th Project
-      th Effective on
-      th Value
-      th Issue
-      th User type
+      - GmRate::DISPLAY_FIELDS.each do |field|
+        th = field.humanize
       th
       th
       th
@@ -17,13 +12,8 @@ table
   tbody
     - @gm_rates.each do |gm_rate|
       tr
-        td = gm_rate.kind
-        td = gm_rate.user
-        td = gm_rate.project
-        td = gm_rate.effective_on
-        td = gm_rate.val
-        td = gm_rate.issue
-        td = gm_rate.user_type
+        - GmRate::DISPLAY_FIELDS.each do |field|
+          td = gm_rate.send(field)
         td = link_to 'Show', gm_rate
         td = link_to 'Edit', edit_gm_rate_path(gm_rate)
         td = link_to 'Destroy', gm_rate, data: {:confirm => 'Are you sure?'}, :method => :delete
