@@ -1,0 +1,9 @@
+= form_for @gm_rate do |f|
+  - if @gm_rate.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@gm_rate.errors.count, "error")} prohibited this gm_rate from being saved:"
+      ul
+        - @gm_rate.errors.full_messages.each do |message|
+          li = message
+
+  .actions = f.submit

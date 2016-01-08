@@ -5,6 +5,8 @@ get '/green-machine/reports/:start/:finish/project-detail/:project_id' => 'gm_re
 get '/green-machine/reports/:start/:finish/project-detail/:project_id/create-invoice' => 'gm_reports#create_invoice', as: :gm_create_invoice
 
 get '/green-machine/config' => 'gm_config#index'
+resources :gm_rates, path: '/green-machine/config/rates'
+
 # Quickbooks auth
 match '/green-machine/quickbooks/flow-start' => 'gm_quickbooks#authenticate', as: :gm_quickbooks_flow_start, via: [:get, :post]
 match '/green-machine/quickbooks/callback' => 'gm_quickbooks#callback', as: :gm_quickbooks_callback, via: [:get, :post]
