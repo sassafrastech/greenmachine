@@ -2,6 +2,10 @@ class GmRate < ActiveRecord::Base
   unloadable
   include GmIntervalSearchable
 
+  belongs_to :user
+  belongs_to :project
+  belongs_to :issue
+
   attr_accessor :multiple_matches
   alias_method :multiple_matches?, :multiple_matches
 
