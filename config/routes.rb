@@ -4,6 +4,7 @@ get '/green-machine/reports/:start/:finish' => 'gm_reports#show'
 get '/green-machine/reports/:start/:finish/project-detail/:project_id' => 'gm_reports#project_detail'
 get '/green-machine/reports/:start/:finish/project-detail/:project_id/create-invoice' => 'gm_reports#create_invoice', as: :gm_create_invoice
 
+# GreenMachine config
 get '/green-machine/config' => 'gm_config#index'
 resources :gm_rates, path: '/green-machine/config/rates'
 
