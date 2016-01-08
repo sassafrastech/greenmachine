@@ -1,4 +1,6 @@
 # Computes data on issues adjust numbers of hours per issue.
+require 'csv'
+
 class GmProjectDetailReport
   attr_accessor :interval, :project, :chunk_data, :chunk_groups, :totals
 
@@ -44,7 +46,7 @@ class GmProjectDetailReport
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
       group(:user_id, :issue_id).
-      order('issues.subject')
+      order('issues.subject').to_a
   end
 
   def build_chunks
