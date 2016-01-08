@@ -1,4 +1,4 @@
-class GmConfigController < ApplicationController
+class GmConfigController < GmApplicationController
   unloadable
 
   before_filter :authorize
