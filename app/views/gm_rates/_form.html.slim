@@ -1,9 +1,22 @@
-= form_for @gm_rate do |f|
+- content_for :header_tags do
+  = stylesheet_link_tag 'formtastic', plugin: 'greenmachine'
+
+= semantic_form_for @gm_rate do |f|
   - if @gm_rate.errors.any?
     #error_explanation
       h2 = "#{pluralize(@gm_rate.errors.count, "error")} prohibited this gm_rate from being saved:"
       ul
         - @gm_rate.errors.full_messages.each do |message|
           li = message
-
-  .actions = f.submit
+  
+  = f.inputs
+    = f.input :kind
+    = f.input :user
+    = f.input :user_type
+    = f.input :project
+    = f.input :issue
+    = f.input :val
+    = f.input :effective_on, as: :string
+    
+  = f.actions do
+    = f.action :submit, as: :button, label: "Submit"
