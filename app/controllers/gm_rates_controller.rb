@@ -54,6 +54,6 @@ class GmRatesController < GmApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def gm_rate_params
-      params[:gm_rate]
+      params.require(:gm_rate).permit(GmRate::DISPLAY_FIELDS)
     end
 end

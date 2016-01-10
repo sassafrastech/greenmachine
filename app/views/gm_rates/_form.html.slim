@@ -1,7 +1,10 @@
 - content_for :header_tags do
   = stylesheet_link_tag 'formtastic', plugin: 'greenmachine'
+
+  / Select2
   = stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css'
   = javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js'
+
   javascript:
     $(function(){
       $('select').select2();
@@ -18,8 +21,6 @@
           li = message
   
   = f.inputs
-    / - %w(kind user user_type project issue val).each do |field|
-    /   = f.input field, label: field.humanize
     = f.input :kind, label: 'kind'.humanize, as: :select, collection: GmRate::KINDS
     = f.input :user, label: 'user'.humanize, collection: User.order(:firstname)
     = f.input :user_type, label: 'user_type'.humanize, as: :select, collection: GmRate::USER_TYPES
