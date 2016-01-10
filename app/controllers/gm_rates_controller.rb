@@ -1,4 +1,5 @@
 class GmRatesController < GmApplicationController
+  unloadable
   before_filter :authorize
   before_action :set_gm_rate, only: [:show, :edit, :update, :destroy]
 
@@ -25,7 +26,7 @@ class GmRatesController < GmApplicationController
     @gm_rate = GmRate.new(gm_rate_params)
 
     if @gm_rate.save
-      redirect_to @gm_rate, notice: 'Gm rate was successfully created.'
+      redirect_to @gm_rate, notice: 'Rate was successfully created.'
     else
       render :new
     end
@@ -34,7 +35,7 @@ class GmRatesController < GmApplicationController
   # PATCH/PUT /gm_rates/1
   def update
     if @gm_rate.update(gm_rate_params)
-      redirect_to @gm_rate, notice: 'Gm rate was successfully updated.'
+      redirect_to @gm_rate, notice: 'Rate was successfully updated.'
     else
       render :edit
     end
@@ -43,7 +44,7 @@ class GmRatesController < GmApplicationController
   # DELETE /gm_rates/1
   def destroy
     @gm_rate.destroy
-    redirect_to gm_rates_url, notice: 'Gm rate was successfully destroyed.'
+    redirect_to gm_rates_url, notice: 'Rate was successfully destroyed.'
   end
 
   private

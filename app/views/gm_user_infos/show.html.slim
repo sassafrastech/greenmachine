@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong User:
+  = @gm_user_info.user
+p
+  strong Effective on:
+  = @gm_user_info.effective_on
+p
+  strong User type:
+  = @gm_user_info.user_type
+
+= link_to 'Edit', edit_gm_user_info_path(@gm_user_info)
+'|
+= link_to 'Back', gm_user_infos_path

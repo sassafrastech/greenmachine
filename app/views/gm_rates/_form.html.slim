@@ -13,13 +13,6 @@
     });
 
 = semantic_form_for @gm_rate do |f|
-  - if @gm_rate.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@gm_rate.errors.count, "error")} prohibited this gm_rate from being saved:"
-      ul
-        - @gm_rate.errors.full_messages.each do |message|
-          li = message
-  
   = f.inputs
     = f.input :kind, label: 'kind'.humanize, as: :select, collection: GmRate::KINDS
     = f.input :user, label: 'user'.humanize, collection: User.order(:firstname)

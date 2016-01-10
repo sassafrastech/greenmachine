@@ -1,0 +1,25 @@
+h1 Listing GM Users
+
+table.list
+  thead
+    tr
+      th User
+      th Effective on
+      th User type
+      th
+      th
+      th
+
+  tbody
+    - @gm_user_infos.each do |gm_user_info|
+      tr
+        td = gm_user_info.user
+        td = gm_user_info.effective_on
+        td = gm_user_info.user_type
+        td = link_to 'Show', gm_user_info
+        td = link_to 'Edit', edit_gm_user_info_path(gm_user_info)
+        td = link_to 'Destroy', gm_user_info, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New GM User Record', new_gm_user_info_path

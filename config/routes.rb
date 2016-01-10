@@ -7,6 +7,7 @@ get '/green-machine/reports/:start/:finish/project-detail/:project_id/create-inv
 # GreenMachine config
 get '/green-machine/config' => 'gm_config#index', as: :gm_config
 resources :gm_rates, path: '/green-machine/config/rates'
+resources :gm_user_infos, path: '/green-machine/config/users'
 
 # Quickbooks auth
 match '/green-machine/quickbooks/flow-start' => 'gm_quickbooks#authenticate', as: :gm_quickbooks_flow_start, via: [:get, :post]
