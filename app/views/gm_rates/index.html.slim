@@ -1,6 +1,9 @@
+- content_for :header_tags do
+  = stylesheet_link_tag 'main', plugin: 'greenmachine'
+
 h1 Rates
 
-table
+table.list
   thead
     tr
       - GmRate::DISPLAY_FIELDS.each do |field|

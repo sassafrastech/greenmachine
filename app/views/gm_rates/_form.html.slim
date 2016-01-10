@@ -1,4 +1,5 @@
 - content_for :header_tags do
+  = stylesheet_link_tag 'main', plugin: 'greenmachine'
   = stylesheet_link_tag 'formtastic', plugin: 'greenmachine'
 
   / Select2
@@ -8,7 +9,6 @@
   javascript:
     $(function(){
       $('select').select2();
-      $('.select2-selection__rendered').attr('title', null);
       $('.datepicker').datepicker();
     });
 

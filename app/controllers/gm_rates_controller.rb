@@ -4,7 +4,7 @@ class GmRatesController < GmApplicationController
 
   # GET /gm_rates
   def index
-    @gm_rates = GmRate.all
+    @gm_rates = GmRate.order('id desc')
   end
 
   # GET /gm_rates/1

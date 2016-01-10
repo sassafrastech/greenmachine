@@ -1,3 +1,5 @@
+<% html_title "GreenMachine" %>
+
 <form id="report-jump-form">
   <%= date_select('j', 'd', order: [:month, :year], start_year: 2014, default: params[:start]) %>
   <%= submit_tag('Go') %>
@@ -32,6 +34,8 @@
 
   <h2>Summary</h2>
   <%= render('summary_grid') %>
+
+  <p><%= link_to 'Config', gm_config_path %></p>
 
 <% end %>
 
