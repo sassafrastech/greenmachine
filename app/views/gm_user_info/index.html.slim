@@ -1,4 +1,8 @@
-h1 Listing GM Users
+= render 'layouts/gm_application'
+
+h1 GM Users
+
+p = link_to 'New GM User Record', new_gm_user_info_path
 
 table.list
   thead
@@ -19,7 +23,3 @@ table.list
         td = link_to 'Show', gm_user_info
         td = link_to 'Edit', edit_gm_user_info_path(gm_user_info)
         td = link_to 'Destroy', gm_user_info, data: {:confirm => 'Are you sure?'}, :method => :delete
-
-br
-
-= link_to 'New GM User Record', new_gm_user_info_path

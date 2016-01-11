@@ -1,16 +1,4 @@
-- content_for :header_tags do
-  = stylesheet_link_tag 'main', plugin: 'greenmachine'
-  = stylesheet_link_tag 'formtastic', plugin: 'greenmachine'
-
-  / Select2
-  = stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css'
-  = javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js'
-
-  javascript:
-    $(function(){
-      $('select').select2();
-      $('.datepicker').datepicker();
-    });
+= render 'layouts/gm_application'
 
 = semantic_form_for @gm_rate do |f|
   = f.inputs

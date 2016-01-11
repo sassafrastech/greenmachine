@@ -8,6 +8,11 @@
 }
 
 /* CONFIG */
+table.list td,
+table.list th {
+  text-align: left;
+}
+
 span[title] {
   cursor: inherit;
 }
@@ -17,7 +22,6 @@ span[title] {
   margin: 0 3px;
 }
 
-table.list td,
-table.list th {
-  text-align: left;
+.formtastic .string input {
+  width: inherit;
 }

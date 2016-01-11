@@ -1,7 +1,8 @@
-- content_for :header_tags do
-  = stylesheet_link_tag 'main', plugin: 'greenmachine'
+= render 'layouts/gm_application'
 
 h1 Rates
+
+p = link_to 'New Rate', new_gm_rate_path
 
 table.list
   thead
@@ -20,7 +21,3 @@ table.list
         td = link_to 'Show', gm_rate
         td = link_to 'Edit', edit_gm_rate_path(gm_rate)
         td = link_to 'Destroy', gm_rate, data: {:confirm => 'Are you sure?'}, :method => :delete
-
-br
-
-= link_to 'New Rate', new_gm_rate_path
