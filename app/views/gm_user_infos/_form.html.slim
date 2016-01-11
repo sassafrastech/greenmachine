@@ -4,7 +4,7 @@
   = f.inputs do
     = f.input :user, label: 'user'.humanize
     = f.input :effective_on, label: 'effective_on'.humanize, as: :string, input_html: { class: 'datepicker' }
-    = f.input :user_type, label: 'user_type'.humanize
+    = f.input :user_type, label: 'user_type'.humanize, collection: GmUserInfo::USER_TYPES
 
   = f.actions do
     = f.action :submit, as: :input, label: "Submit"

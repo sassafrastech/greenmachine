@@ -3,7 +3,6 @@ class GmRate < ActiveRecord::Base
   include GmIntervalSearchable
 
   DISPLAY_FIELDS = %w(kind user user_type project issue val effective_on)
-  USER_TYPES = %w(member employee contractor accountant ignore)
   KINDS = %w(revenue wage user_pto_election payroll_tax_pct general_expenses health_insurance)
 
   belongs_to :user
