@@ -1,27 +1,27 @@
-class GmUserInfosController < GmApplicationController
+class GmUserInfoController < GmApplicationController
   unloadable
   before_filter :authorize
   before_action :set_gm_user_info, only: [:show, :edit, :update, :destroy]
 
-  # GET /gm_user_infos
+  # GET /gm_user_info
   def index
-    @gm_user_infos = GmUserInfo.joins(:user).order('users.firstname, effective_on')
+    @gm_user_info = GmUserInfo.joins(:user).order('users.firstname, effective_on')
   end
 
-  # GET /gm_user_infos/1
+  # GET /gm_user_info/1
   def show
   end
 
-  # GET /gm_user_infos/new
+  # GET /gm_user_info/new
   def new
     @gm_user_info = GmUserInfo.new
   end
 
-  # GET /gm_user_infos/1/edit
+  # GET /gm_user_info/1/edit
   def edit
   end
 
-  # POST /gm_user_infos
+  # POST /gm_user_info
   def create
     @gm_user_info = GmUserInfo.new(gm_user_info_params)
 
@@ -32,7 +32,7 @@ class GmUserInfosController < GmApplicationController
     end
   end
 
-  # PATCH/PUT /gm_user_infos/1
+  # PATCH/PUT /gm_user_info/1
   def update
     if @gm_user_info.update(gm_user_info_params)
       redirect_to @gm_user_info, notice: 'GM user record was successfully updated.'
@@ -41,10 +41,10 @@ class GmUserInfosController < GmApplicationController
     end
   end
 
-  # DELETE /gm_user_infos/1
+  # DELETE /gm_user_info/1
   def destroy
     @gm_user_info.destroy
-    redirect_to gm_user_infos_url, notice: 'GM user record was successfully destroyed.'
+    redirect_to gm_user_info_url, notice: 'GM user record was successfully destroyed.'
   end
 
   private
