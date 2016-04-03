@@ -45,6 +45,7 @@
 
 <script type="text/javascript">
   var month_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
   $(document).ready(function(){
     $('#report-jump-form').on('submit', function(e){
       e.preventDefault();
@@ -54,8 +55,13 @@
       if (year == 2014 && month < 10)
         alert("No data for that month");
       else {
+        var end_day = month_days[month - 1];
+
+        if (month == 2 && year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
+          end_day = 29;
+
         var start = "" + year + (month < 10 ? '0' : '') + month + '01';
-        var end = "" + year + (month < 10 ? '0' : '') + month + month_days[month - 1];
+        var end = "" + year + (month < 10 ? '0' : '') + month + end_day;
         window.location.href = "/green-machine/reports/" + start + "/" + end;
       }
     });
