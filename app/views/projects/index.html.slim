@@ -1,0 +1,23 @@
+h1 Listing projects
+
+table
+  thead
+    tr
+      th Gm qb customer
+      th Gm extra emails
+      th
+      th
+      th
+
+  tbody
+    - @projects.each do |project|
+      tr
+        td = project.gm_qb_customer_id
+        td = project.gm_extra_emails
+        td = link_to 'Show', project
+        td = link_to 'Edit', edit_project_path(project)
+        td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Project', new_project_path

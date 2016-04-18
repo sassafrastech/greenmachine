@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Gm qb customer:
+  = @project.gm_qb_customer_id
+p
+  strong Gm extra emails:
+  = @project.gm_extra_emails
+
+= link_to 'Edit', edit_project_path(@project)
+'|
+= link_to 'Back', projects_path
