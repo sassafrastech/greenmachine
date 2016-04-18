@@ -1,0 +1,25 @@
+h1 Listing gm_project_infos
+
+table
+  thead
+    tr
+      th Project
+      th Gm qb customer
+      th Gm extra emails
+      th
+      th
+      th
+
+  tbody
+    - @gm_project_infos.each do |gm_project_info|
+      tr
+        td = gm_project_info.project
+        td = gm_project_info.gm_qb_customer_id
+        td = gm_project_info.gm_extra_emails
+        td = link_to 'Show', gm_project_info
+        td = link_to 'Edit', edit_gm_project_info_path(gm_project_info)
+        td = link_to 'Destroy', gm_project_info, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Gm project info', new_gm_project_info_path
