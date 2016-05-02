@@ -23,10 +23,10 @@ class GmProjectDetailReport
       chunk_groups.each do |user, chunks|
         csv << [user == :sassy ? 'Sassafras' : user.name]
         chunks.each do |chunk|
-          rounded_hours = (chunk.hours * 100).ceil.to_f / 100.0 # Round up to next hundredth to avoid 0.00
-          csv << ['', "#{chunk.issue.tracker.name} ##{chunk.issue.id}: #{chunk.issue.subject}", rounded_hours]
+          csv << ['', "#{chunk.issue.tracker.name} ##{chunk.issue.id}: #{chunk.issue.subject}",
+            chunk.rounded_hours]
         end
-        csv << ['', "Total", totals[user].round(2)]
+        csv << ['', "Total", totals[user]]
       end
     end
   end
@@ -100,7 +100,7 @@ class GmProjectDetailReport
   end
 
   def calculate_totals
-    self.totals = Hash[*chunk_groups.map{ |u, chunks| [u, chunks.sum(&:hours)] }.flatten]
+    self.totals = Hash[*chunk_groups.map{ |u, chunks| [u, chunks.sum(&:rounded_hours)] }.flatten]
   end
 end
 

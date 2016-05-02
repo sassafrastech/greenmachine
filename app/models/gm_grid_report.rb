@@ -112,7 +112,7 @@ class GmGridReport
         totals[type][:by_project][p] = {hours: 0, dollars: 0}
         users.each do |u|
           if chunk = chunks[type][[u, p]]
-            totals[type][:by_project][p][:hours] += chunk.hours
+            totals[type][:by_project][p][:hours] += chunk.rounded_hours
             totals[type][:by_project][p][:dollars] += chunk.dollars
           end
         end
@@ -123,7 +123,7 @@ class GmGridReport
         totals[type][:by_user][u] = {hours: 0, dollars: 0}
         projects.each do |p|
           if chunk = chunks[type][[u, p]]
-            totals[type][:by_user][u][:hours] += chunk.hours
+            totals[type][:by_user][u][:hours] += chunk.rounded_hours
             totals[type][:by_user][u][:dollars] += chunk.dollars
           end
         end
@@ -157,7 +157,7 @@ class GmGridReport
 
     # PTO chunks still get generated even though not shown in main grid
     summaries[:pto_hours_claimed] = GmSummary.new.tap do |s|
-      users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:hours) }
+      users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:rounded_hours) }
     end
 
     summaries[:pto_dollars_claimed] = summaries[:pto_hours_claimed] * summaries[:wage_rate]

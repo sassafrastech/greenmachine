@@ -24,7 +24,6 @@ class GmInvoiceCreator
 
     report.totals.each do |user, hours|
       rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
-      hours = hours.round(2)
 
       line_item = Quickbooks::Model::InvoiceLineItem.new
       line_item.amount = rate * hours
