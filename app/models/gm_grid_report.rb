@@ -73,8 +73,10 @@ class GmGridReport
     self.projects = chunk_data.map(&:project).uniq.sort_by(&:name)
 
     # Remove or catch special projects.
-    self.pto_proj = projects.detect{ |p| p.name == 'Paid Time Off' }
-    self.projects -= [pto_proj]
+    special_projects = []
+    special_projects << self.pto_proj = projects.detect { |p| p.name == 'Paid Time Off' }
+    special_projects << projects.detect { |p| p.name == 'Clock In Out' }
+    self.projects -= special_projects
 
     self.internal_proj = projects.detect{ |p| p.name == 'Sassafras Internal' }
 
@@ -201,7 +203,7 @@ class GmGridReport
 
     # Hours worked per day/week
     days_in_period = interval.finish - interval.start + 1
-    weeks_in_period = days_in_period / 365 * 52
+    weeks_in_period = days_in_period / 7
     summaries[:hours_per_week] = (summaries[:worker_hours] + summaries[:pto_hours_claimed]) / weeks_in_period
     summaries[:hours_per_week].total_type = :sum
     summaries[:hours_per_day] = summaries[:hours_per_week] / 5
