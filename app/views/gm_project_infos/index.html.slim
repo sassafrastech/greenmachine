@@ -1,0 +1,27 @@
+= render 'layouts/gm_application'
+
+h1 Listing GM Projects
+
+p = link_to 'New GM Project Record', new_gm_project_info_path
+
+table.list
+  thead
+    tr
+      th Project
+      th Quickbooks Customer ID
+      th Extra emails
+      th
+      th
+      th
+
+  tbody
+    - @gm_project_infos.each do |gm_project_info|
+      tr
+        td = gm_project_info.project
+        td = gm_project_info.gm_qb_customer_id
+        td = gm_project_info.gm_extra_emails
+        td = link_to 'Show', gm_project_info
+        td = link_to 'Edit', edit_gm_project_info_path(gm_project_info)
+        td = link_to 'Destroy', gm_project_info, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
