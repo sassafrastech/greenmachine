@@ -1,11 +1,15 @@
-h1 Listing gm_project_infos
+= render 'layouts/gm_application'
 
-table
+h1 Listing GM Projects
+
+p = link_to 'New GM Project Record', new_gm_project_info_path
+
+table.list
   thead
     tr
       th Project
-      th Gm qb customer
-      th Gm extra emails
+      th Quickbooks Customer ID
+      th Extra emails
       th
       th
       th
@@ -21,5 +25,3 @@ table
         td = link_to 'Destroy', gm_project_info, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
-
-= link_to 'New Gm project info', new_gm_project_info_path
