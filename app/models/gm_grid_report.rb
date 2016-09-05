@@ -72,6 +72,10 @@ class GmGridReport
   def extract_projects
     self.projects = chunk_data.map(&:project).uniq.sort_by(&:name)
 
+    # project_ids = chunk_data.map(&:project).map(&:id).uniq
+    # # self.projects = GmProjectInfo.joins(:project).where(project_id: project_ids).order('projects.name')
+    # self.projects = project_ids.map { |i| GmProjectInfo.find_or_create_by(project_id: i) }.sort_by(&:name)
+
     # Remove or catch special projects.
     self.pto_proj = projects.detect{ |p| p.name == 'Paid Time Off' }
     self.projects -= [pto_proj]

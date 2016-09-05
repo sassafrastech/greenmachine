@@ -6,13 +6,9 @@ module ProjectPatch
   end
 
   module InstanceMethods
-    # Gets the full rate for this project over the given interval.
-    def gm_full_rate(interval)
-      if name == 'Sassafras Internal'
-        GmRate.new(val: 0)
-      else
-        GmRateFinder.find(:revenue, interval, project: self)
-      end
+    def gm_project
+      @gm_project ||= GmProjectInfo.find_or_create_by(project: self)
     end
+    delegate :gm_qb_customer_id, :gm_extra_emails, :gm_full_rate, to: :gm_project
   end
 end
