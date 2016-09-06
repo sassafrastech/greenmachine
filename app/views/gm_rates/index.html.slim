@@ -4,6 +4,14 @@ h1 Rates
 
 p = link_to 'New Rate', new_gm_rate_path
 
+p.warning WARNING: When editing rates, NEVER delete or modify an existing rate unless you just created it by mistake. Doing so will mess with historical data. Create a new rate and use the effective date to override previous rates. Leave the val column blank to set a rate back to the default. 
+
+p.notes 
+  | Notes:
+  ul
+    li Rates take precedence in the following order: issue > project > user > user type
+    li All projects need a revenue rate. However, most projects don’t need a wage rate—only if it’s different from the default. 
+
 table.list
   thead
     tr
@@ -20,4 +28,4 @@ table.list
           td = gm_rate.send(field)
         td = link_to 'Show', gm_rate
         td = link_to 'Edit', edit_gm_rate_path(gm_rate)
-        td = link_to 'Destroy', gm_rate, data: {:confirm => 'Are you sure?'}, :method => :delete
+        td = link_to 'Destroy', gm_rate, data: {:confirm => "WARNING: When editing rates, NEVER delete or modify an existing rate unless you just created it by mistake. Doing so will mess with historical data. To cancel or change a rate, create a new rate instead.\n\nAre you sure you want to delete this rate?"}, :method => :delete
