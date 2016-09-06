@@ -1,3 +1,4 @@
+# Auto generated test file
 require 'test_helper'
 
 class GmRatesControllerTest < ActionController::TestCase

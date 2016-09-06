@@ -7,6 +7,8 @@
 
 <h1>GreenMachine Report</h1>
 
+<p><%= link_to 'Config', gm_config_path %></p>
+
 <% if @date_error %>
   <%= @error %>
   <%= link_to('Return to Default', '/green-machine') %>
@@ -34,8 +36,6 @@
 
   <h2>Summary</h2>
   <%= render('summary_grid') %>
-
-  <p><%= link_to 'Config', gm_config_path %></p>
 
 <% end %>
 
