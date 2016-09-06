@@ -12,12 +12,12 @@ Period: <%= params[:start] %> to <%= params[:finish] %>
     <% chunks.each do |chunk| %>
       <tr>
         <td><%= chunk.issue.tracker.name %> #<%= chunk.issue.id %>: <%= chunk.issue.subject %></td>
-        <td><%= number_with_precision(chunk.hours, precision: 2) %></td>
+        <td><%= number_with_precision(chunk.rounded_hours, precision: 1) %></td>
       </tr>
     <% end %>
     <tr>
       <td>Total</td>
-      <td><%= number_with_precision(@report.totals[user], precision: 2) %></td>
+      <td><%= number_with_precision(@report.totals[user], precision: 1) %></td>
     </tr>
   </table>
 <% end %>

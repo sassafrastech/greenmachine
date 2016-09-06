@@ -31,4 +31,9 @@ class GmChunk
   def multiple_rates?
     rates.size > 1
   end
+
+  # Rounds hours to the nearest tenth, or to 0.1 if that would be zero.
+  def rounded_hours
+    hours < 0.1 ? 0.1 : hours.round(1)
+  end
 end
