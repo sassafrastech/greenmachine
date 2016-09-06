@@ -12,7 +12,7 @@ class GmRate < ActiveRecord::Base
   attr_accessor :multiple_matches
   alias_method :multiple_matches?, :multiple_matches
 
-  validates :kind, :val, :effective_on, presence: true
+  validates :kind, :effective_on, presence: true
 
   # Returns a 4 digit binary code (as a string) representing which attributes are present
   # Bit 1: Issue
