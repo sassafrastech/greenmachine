@@ -1,0 +1,43 @@
+= render 'layouts/gm_application'
+
+h1 
+  => link_to "GreenMachine Config", gm_config_path
+  | > GM Users
+
+p = link_to 'New GM User Record', new_gm_user_info_path
+
+p.notes
+  | Notes:
+  ul
+    li 
+      | Redmine users must have a special GreenMachine user type in order to appear correctly in reports. Warnings will appear if a user has hours but no GreenMachine type. User types are as follows:
+      ul
+        li <code>member</code>: Worker/owner
+        li <code>employee</code>: Officially hired employee
+        li <code>contractor</code>: 1099 contractor
+        li <code>accountant</code>: External accountant/bookkeeper/etc.
+        li <code>ignore</code>: Explicitly ignore this user’s hours
+    li When a user changes status, add a new record and set the effective date rather than editing the previous record. 
+    li
+      a href="https://docs.google.com/document/d/1uRRfkrjNBRszrxNSDv_pSKkT7Li8DXa_-_hZFhu54vc/edit#heading=h.1pdeljxs86lv" target="_blank"
+        | More notes here
+
+table.list
+  thead
+    tr
+      th User
+      th Effective on
+      th User type
+      th
+      th
+      th
+
+  tbody
+    - @gm_user_infos.each do |gm_user_info|
+      tr
+        td = gm_user_info.user
+        td = gm_user_info.effective_on
+        td = gm_user_info.user_type
+        td = link_to 'Show', gm_user_info
+        td = link_to 'Edit', edit_gm_user_info_path(gm_user_info)
+        td = link_to 'Destroy', gm_user_info, data: {:confirm => 'Are you sure?'}, :method => :delete

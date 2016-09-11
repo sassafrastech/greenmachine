@@ -3,9 +3,13 @@ class GmUserInfo < ActiveRecord::Base
   unloadable
   include GmIntervalSearchable
 
+  USER_TYPES = %w(member employee contractor accountant ignore)
+
   belongs_to :user
 
   self.table_name = 'gm_user_info'
+
+  validates :user, :effective_on, :user_type, presence: true
 
   # We can't use Redmine's permission system for this since it's project-based only.
   # For now anybody that has a user type can see the system.

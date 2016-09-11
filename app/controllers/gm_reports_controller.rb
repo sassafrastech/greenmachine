@@ -1,4 +1,4 @@
-class GmReportsController < ApplicationController
+class GmReportsController < GmApplicationController
   unloadable
 
   before_filter :authorize, :build_interval
@@ -35,13 +35,6 @@ class GmReportsController < ApplicationController
   end
 
   private
-
-  def authorize
-    unless GmUserInfo.can_view?(User.current)
-      @error = "Unauthorized."
-      render :show
-    end
-  end
 
   def build_interval
     begin

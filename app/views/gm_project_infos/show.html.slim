@@ -1,0 +1,19 @@
+= render 'layouts/gm_application'
+
+p#notice = notice
+
+table
+  tr
+    td: b Project:
+    td = @gm_project_info.project
+  tr
+    td: b Quickbooks Customer ID:
+    td = @gm_project_info.gm_qb_customer_id
+  tr
+    td: b Extra emails:
+    td = @gm_project_info.gm_extra_emails
+
+p 
+  => link_to 'Edit', edit_gm_project_info_path(@gm_project_info)
+  '|
+  = link_to 'Back', gm_project_infos_path

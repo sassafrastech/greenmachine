@@ -1,0 +1,14 @@
+= render 'layouts/gm_application'
+
+p#notice = notice
+
+table
+  - GmRate::DISPLAY_FIELDS.each do |field|
+    tr
+      td: b #{field.humanize}:
+      td = @gm_rate.send(field)
+
+p
+  = link_to 'Edit', edit_gm_rate_path(@gm_rate)
+  '|
+  = link_to 'Back', gm_rates_path

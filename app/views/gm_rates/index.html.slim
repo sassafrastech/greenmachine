@@ -1,0 +1,36 @@
+= render 'layouts/gm_application'
+
+h1 
+  => link_to "GreenMachine Config", gm_config_path
+  | > Rates
+
+p = link_to 'New Rate', new_gm_rate_path
+
+p.warning WARNING: When editing rates, NEVER delete or modify an existing rate unless you just created it by mistake. Doing so will mess with historical data. Create a new rate and use the effective date to override previous rates. Leave the val column blank to set a rate back to the default. 
+
+p.notes 
+  | Notes:
+  ul
+    li Rates take precedence in the following order: issue > project > user > user type
+    li All projects need a revenue rate. However, most projects don’t need a wage rate—only if it’s different from the default. 
+    li
+      a href="https://docs.google.com/document/d/1uRRfkrjNBRszrxNSDv_pSKkT7Li8DXa_-_hZFhu54vc/edit#heading=h.1pdeljxs86lv" target="_blank"
+        | More notes here
+
+table.list
+  thead
+    tr
+      - GmRate::DISPLAY_FIELDS.each do |field|
+        th = field.humanize
+      th
+      th
+      th
+
+  tbody
+    - @gm_rates.each do |gm_rate|
+      tr
+        - GmRate::DISPLAY_FIELDS.each do |field|
+          td = gm_rate.send(field)
+        td = link_to 'Show', gm_rate
+        td = link_to 'Edit', edit_gm_rate_path(gm_rate)
+        td = link_to 'Destroy', gm_rate, data: {:confirm => "WARNING: When editing rates, NEVER delete or modify an existing rate unless you just created it by mistake. Doing so will mess with historical data. To cancel or change a rate, create a new rate instead.\n\nAre you sure you want to delete this rate?"}, :method => :delete

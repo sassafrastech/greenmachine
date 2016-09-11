@@ -1,0 +1,14 @@
+= render 'layouts/gm_application'
+
+= semantic_form_for @gm_rate do |f|
+  = f.inputs
+    = f.input :kind, label: 'kind'.humanize, as: :select, collection: GmRate::KINDS
+    = f.input :user, label: 'user'.humanize, collection: User.order(:firstname)
+    = f.input :user_type, label: 'user_type'.humanize, as: :select, collection: GmUserInfo::USER_TYPES
+    = f.input :project, label: 'project'.humanize, collection: Project.order(:name)
+    = f.input :issue, label: 'issue'.humanize
+    = f.input :val, label: 'val'.humanize, input_html: { style: 'width: inherit' }
+    = f.input :effective_on, label: 'effective_on'.humanize, as: :string, input_html: { class: 'datepicker', style: 'width: inherit' }
+    
+  = f.actions do
+    = f.action :submit, as: :button, label: "Submit"

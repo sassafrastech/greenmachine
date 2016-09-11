@@ -1,9 +1,13 @@
+<% html_title "GreenMachine" %>
+
 <form id="report-jump-form">
   <%= date_select('j', 'd', order: [:month, :year], start_year: 2014, default: params[:start]) %>
   <%= submit_tag('Go') %>
 </form>
 
 <h1>GreenMachine Report</h1>
+
+<p><%= link_to 'Config', gm_config_path %></p>
 
 <% if @date_error %>
   <%= @error %>

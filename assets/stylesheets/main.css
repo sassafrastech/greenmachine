@@ -6,3 +6,22 @@
   height: 26px;
   line-height: 5px;
 }
+
+/* CONFIG */
+table.list td,
+table.list th {
+  text-align: left;
+}
+
+span[title] {
+  cursor: inherit;
+}
+
+[title='required'] {
+  color: #bb0000;
+  margin: 0 3px;
+}
+
+.formtastic .string input {
+  width: inherit;
+}

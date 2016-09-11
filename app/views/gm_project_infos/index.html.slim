@@ -1,0 +1,37 @@
+= render 'layouts/gm_application'
+
+h1 
+  => link_to "GreenMachine Config", gm_config_path
+  | > GM Projects
+
+p = link_to 'New GM Project Record', new_gm_project_info_path
+
+p.notes
+  | Notes:
+  ul
+    li Determine the customer ID by opening the customer’s account in QuickBooks and noting the number at the end of the query string, e.g. https://qbo.intuit.com/app/customerdetail?nameId=2 would mean the ID is 2.
+    li
+      a href="https://docs.google.com/document/d/1uRRfkrjNBRszrxNSDv_pSKkT7Li8DXa_-_hZFhu54vc/edit#heading=h.1pdeljxs86lv" target="_blank"
+        | More notes here
+
+table.list
+  thead
+    tr
+      th Project
+      th Quickbooks Customer ID
+      th Extra emails
+      th
+      th
+      th
+
+  tbody
+    - @gm_project_infos.each do |gm_project_info|
+      tr
+        td = gm_project_info.project
+        td = gm_project_info.gm_qb_customer_id
+        td = gm_project_info.gm_extra_emails
+        td = link_to 'Show', gm_project_info
+        td = link_to 'Edit', edit_gm_project_info_path(gm_project_info)
+        td = link_to 'Destroy', gm_project_info, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br

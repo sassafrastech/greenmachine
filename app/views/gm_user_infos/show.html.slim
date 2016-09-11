@@ -1,0 +1,19 @@
+= render 'layouts/gm_application'
+
+p#notice = notice
+
+table
+  tr
+    td: b User:
+    td = @gm_user_info.user
+  tr
+    td: b Effective on:
+    td = @gm_user_info.effective_on
+  tr
+    td: b User type:
+    td = @gm_user_info.user_type
+
+p 
+  => link_to 'Edit', edit_gm_user_info_path(@gm_user_info)
+  '|
+  = link_to 'Back', gm_user_infos_path
