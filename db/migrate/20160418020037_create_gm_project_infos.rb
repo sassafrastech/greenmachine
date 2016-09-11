@@ -9,11 +9,11 @@ class CreateGmProjectInfos < ActiveRecord::Migration
     end
 
     Project.all.each do |p|
-      if p.gm_qb_customer_id || p.gm_extra_emails
+      if p['gm_qb_customer_id'] || p['gm_extra_emails']
         GmProjectInfo.create(
           project: p,
-          gm_qb_customer_id: p.gm_qb_customer_id,
-          gm_extra_emails: p.gm_extra_emails,
+          gm_qb_customer_id: p['gm_qb_customer_id'],
+          gm_extra_emails: p['gm_extra_emails'],
         )
       end
     end
