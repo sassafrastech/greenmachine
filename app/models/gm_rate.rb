@@ -14,6 +14,8 @@ class GmRate < ActiveRecord::Base
 
   validates :kind, :effective_on, presence: true
 
+  before_save { self.user_type = nil if user_type.blank? }
+
   # Returns a 4 digit binary code (as a string) representing which attributes are present
   # Bit 1: Issue
   # Bit 2: Project
