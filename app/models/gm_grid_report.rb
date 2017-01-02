@@ -181,7 +181,7 @@ class GmGridReport
     end
 
     summaries[:payroll_tax] = GmSummary.new.tap do |s|
-      users.each{ |u| s[u] = u.gm_info(interval).payroll_tax? ? summaries[:wage][u] * payroll_tax_rate : nil }
+      users.each{ |u| s[u] = u.gm_info(interval).payroll_tax? && summaries[:wage][u].present? ? summaries[:wage][u] * payroll_tax_rate : nil }
     end
 
     # Hours worked by internal folks.
