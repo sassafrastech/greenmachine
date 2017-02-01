@@ -7,21 +7,29 @@
 
   <tr><td>&nbsp;</td></tr>
 
+  <%= render('summary_row', name: 'Paid Hours', key: :paid_hours, type: :float) %>
+  <%= render('summary_row', name: 'Total Hours', key: :worker_hours, type: :float) %>
+  <%= render('summary_row', name: 'Hours/Day', key: :hours_per_day, type: :float) %>
+  <%= render('summary_row', name: 'Hours/Week', key: :hours_per_week, type: :float) %>
+
+  <tr><td>&nbsp;</td></tr>
+
   <%= render('summary_row', name: 'PTO Hours Claimed', key: :pto_hours_claimed, type: :float) %>
   <%= render('summary_row', name: 'PTO Dollars Claimed', key: :pto_dollars_claimed, type: :currency) %>
-  <%= render('summary_row', name: 'Wages Including PTO', key: :wages_incl_pto, type: :currency) %>
-  <%= render('summary_row', name: 'PTO Hours/Day', key: :pto_election, type: :float) %>
-  <%= render('summary_row', name: 'Actual Hours/Day', key: :hours_per_day, type: :float) %>
-  <%= render('summary_row', name: 'Actual Hours/Week', key: :hours_per_week, type: :float) %>
+  <%= render('summary_row', name: 'Paid Hours + PTO', key: :hours_incl_pto, type: :float) %>
+  <%= render('summary_row', name: 'Wages + PTO', key: :wages_incl_pto, type: :currency) %>
+  <!-- <%= render('summary_row', name: 'PTO Hours/Day', key: :pto_election, type: :float) %> -->
 
   <tr><td>&nbsp;</td></tr>
 
-  <%= render('summary_row', name: 'Net PTO Savings', key: :net_pto, type: :dollars) %>
+  <%= render('summary_row', name: 'Gross PTO Hours Earned', key: :gross_pto_hours, type: :float) %>
+  <%= render('summary_row', name: 'Net PTO Hours Earned', key: :net_pto_hours, type: :float) %>
   <%= render('summary_row', name: 'Gross PTO Savings', key: :gross_pto, type: :currency) %>
+  <%= render('summary_row', name: 'Net PTO Savings', key: :net_pto, type: :currency) %>
 
   <tr><td>&nbsp;</td></tr>
 
-  <% if params[:opts] == "surplus" %>
+  <% if params[:opts] == "surplus" || params[:surplus] == "1" %>
     <%= render('summary_row', name: 'Health Insurance', key: :health_insurance, type: :currency) %>
     <%= render('summary_row', name: 'Payroll Tax', key: :payroll_tax, type: :currency) %>
     <%= render('summary_row', name: 'Share of General Expenses', key: :general_expenses_share, type: :currency) %>
