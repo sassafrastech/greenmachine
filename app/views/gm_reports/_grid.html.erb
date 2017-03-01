@@ -17,7 +17,7 @@
       <% @report.users.each do |user| %>
         <td>
           <% if chunk = @report.chunks[grid_type][[user, project]] %>
-            <div class="hours"><%= number_with_precision(chunk.rounded_hours, precision: 1) %></div>
+            <div class="hours"><%= number_with_precision(chunk.rounded_hours, precision: 2) %></div>
             <div class="rate">
               <%= number_to_currency(chunk.rate.val) %><%= chunk.multiple_rates? ? '*' : '' %>
             </div>
@@ -25,7 +25,7 @@
         </td>
       <% end %>
 
-      <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 1) %></td>
+      <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 2) %></td>
       <td><%= number_to_currency(@report.totals[grid_type][:by_project][project][:dollars]) %></td>
       <td>
         <% if grid_type == :revenue %>
@@ -41,7 +41,7 @@
   <tr>
     <td>Total Hours</td>
     <% @report.users.each do |user| %>
-      <td><%= number_with_precision(@report.totals[grid_type][:by_user][user][:hours], precision: 1) %></td>
+      <td><%= number_with_precision(@report.totals[grid_type][:by_user][user][:hours], precision: 2) %></td>
     <% end %>
     <td></td>
     <td></td>
