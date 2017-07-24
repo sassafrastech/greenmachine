@@ -2,7 +2,7 @@
 require 'csv'
 
 class GmProjectDetailReport
-  attr_accessor :interval, :project, :chunk_data, :chunk_groups, :totals
+  attr_accessor :interval, :project, :category, :chunk_data, :chunk_groups, :totals
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -39,14 +39,18 @@ class GmProjectDetailReport
 
   # Run main SQL query to get hours per worker in the given time period.
   def generate_chunk_data
-    self.chunk_data = TimeEntry.
+    query = TimeEntry.
       select('user_id, issue_id, SUM(hours) AS hours').
       joins(:issue, :user).
       where(project_id: project.id).
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
       group(:user_id, :issue_id).
-      order('issues.subject').to_a
+      order('issues.subject')
+
+    query = query.where('issues.category_id = ?', category.id) if category
+
+    self.chunk_data = query.to_a
   end
 
   def build_chunks
@@ -103,4 +107,3 @@ class GmProjectDetailReport
     self.totals = Hash[*chunk_groups.map{ |u, chunks| [u, chunks.sum(&:rounded_hours)] }.flatten]
   end
 end
-

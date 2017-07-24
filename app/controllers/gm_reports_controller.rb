@@ -55,7 +55,8 @@ class GmReportsController < GmApplicationController
 
   def build_project_report
     @project = Project.find(params[:project_id])
-    @report = GmProjectDetailReport.new(interval: @interval, project: @project)
+    @category = params[:category_id] ? IssueCategory.find(params[:category_id]) : nil
+    @report = GmProjectDetailReport.new(interval: @interval, project: @project, category: @category)
     @report.run
   end
 
