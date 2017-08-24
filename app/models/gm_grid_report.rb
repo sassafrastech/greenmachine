@@ -1,7 +1,7 @@
 # Handles compilation of data for the main GreenMachine grid report.
 class GmGridReport
   attr_accessor :interval, :chunk_data, :users, :projects, :chunks, :warnings, :project_rates,
-    :user_types, :user_wage_rates, :totals, :summaries, :pto_proj, :internal_proj
+    :user_types, :user_wage_rates, :totals, :summaries, :pto_proj, :internal_projects
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -78,7 +78,7 @@ class GmGridReport
     special_projects << projects.detect { |p| p.name == 'Clock In Out' }
     self.projects -= special_projects
 
-    self.internal_proj = projects.detect{ |p| p.name == 'Internal' }
+    self.internal_projects = projects.select { |p| p.name == 'Internal' || p.gm_full_rate(interval).val == 0 }
 
     # Ensure all projects have rates.
     self.project_rates = Hash[*projects.map{ |p| [p, p.gm_full_rate(interval)] }.flatten]
