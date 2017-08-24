@@ -6,11 +6,7 @@ class GmProjectInfo < ActiveRecord::Base
   def gm_full_rate(interval)
     @gm_full_rate ||= {}
     return @gm_full_rate[interval] if @gm_full_rate[interval]
-    @gm_full_rate[interval] = if name == 'Internal'
-      GmRate.new(val: 0)
-    else
-      GmRateFinder.find(:revenue, interval, project: project)
-    end
+    @gm_full_rate[interval] = GmRateFinder.find(:revenue, interval, project: project)
   end
 
 end

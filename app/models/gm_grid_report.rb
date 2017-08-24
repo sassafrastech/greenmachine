@@ -78,7 +78,7 @@ class GmGridReport
     special_projects << projects.detect { |p| p.name == 'Clock In Out' }
     self.projects -= special_projects
 
-    self.internal_projects = projects.select { |p| p.name == 'Internal' || p.gm_full_rate(interval).val == 0 }
+    self.internal_projects = projects.select { |p| p.gm_full_rate(interval).val == 0 }
 
     # Ensure all projects have rates.
     self.project_rates = Hash[*projects.map{ |p| [p, p.gm_full_rate(interval)] }.flatten]
