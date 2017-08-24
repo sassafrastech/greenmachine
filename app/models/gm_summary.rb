@@ -1,6 +1,6 @@
 # Represents a summary row in the main grid.
 class GmSummary
-  attr_accessor :by_user, :total_type, :show_zero
+  attr_accessor :by_user, :total, :total_type, :show_zero
   alias_method :show_zero?, :show_zero
 
   def initialize(attribs = {})
@@ -10,11 +10,12 @@ class GmSummary
     self.show_zero = false
   end
 
+  # `total_type` can be `:none`, `:sum`, `:average`, or a custom value. If a custom value, total
+  # should be set manually.
   def total
+    return nil if total_type == :none
     return @total if defined?(@total)
-    if total_type == :none
-      @total = nil
-    else
+    if total_type.in? [:sum, :average]
       non_nil = by_user.values.reject(&:nil?)
       @total = non_nil.sum
       @total /= non_nil.size if total_type == :average && !non_nil.empty?
@@ -39,7 +40,7 @@ class GmSummary
   end
 
   def /(other)
-    quotient = self.class.new(total_type: :average)
+    quotient = self.class.new(total_type: :divide_totals)
     by_user.keys.each do |u|
       _other = other.is_a?(Numeric) ? other : other[u]
       quotient[u] = if self[u].nil? && _other.nil?
@@ -50,6 +51,8 @@ class GmSummary
         (self[u] || 0) / _other
       end
     end
+    other_total = other.is_a?(Numeric) ? other : other.total
+    quotient.total = total / other_total if total && other_total > 0
     quotient
   end
 
