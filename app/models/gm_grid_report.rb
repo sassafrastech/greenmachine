@@ -96,7 +96,7 @@ class GmGridReport
       chunk_data.each do |datum|
         datum_rate = GmRateFinder.find(type, interval,
           user: datum.user, project: datum.project, issue: datum.issue)
-        if datum_rate
+        if datum_rate && (type == :wage || !datum.project.in?(internal_projects))
           chunks[type][[datum.user, datum.project]] ||= GmChunk.new
           chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours, rate: datum_rate)
         end
