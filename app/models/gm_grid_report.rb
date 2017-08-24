@@ -154,7 +154,6 @@ class GmGridReport
     end
 
     summaries[:rev_wage] = summaries[:revenue] / summaries[:wage]
-    summaries[:rev_wage].total_type = :none
     summaries[:rev_wage].show_zero = true
 
     summaries[:health_insurance] = GmSummary.new.tap do |s|
@@ -213,7 +212,6 @@ class GmGridReport
     summaries[:surplus] = summaries[:revenue] - summaries[:total_expenses] - summaries[:wage]
 
     summaries[:rev_exp_wage] = summaries[:revenue] / (summaries[:total_expenses] + summaries[:wage])
-    summaries[:rev_exp_wage].total_type = :none
     summaries[:rev_exp_wage].show_zero = true
 
     # Hours worked per day/week
