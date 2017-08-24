@@ -179,6 +179,8 @@ class GmGridReport
 
     summaries[:average_billed_rate] = summaries[:revenue] / summaries[:billed_hours]
 
+    summaries[:percent_billed] = summaries[:billed_hours] * 100 / summaries[:paid_hours]
+
     # PTO chunks still get generated even though not shown in main grid
     summaries[:pto_hours_claimed] = GmSummary.new(interval: interval, internal_only: true).tap do |s|
       users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:rounded_hours) }

@@ -1,4 +1,7 @@
-<% func = type == :currency ? 'number_to_currency' : 'number_with_precision' %>
+<% func = case type
+  when :currency then 'number_to_currency'
+  when :percent then 'number_to_percentage'
+  else 'number_with_precision' end %>
 <tr>
   <td>
     <%= name %>
