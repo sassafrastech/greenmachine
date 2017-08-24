@@ -1,13 +1,22 @@
 # Represents a summary row in the main grid.
 class GmSummary
-  attr_accessor :by_user, :total, :total_type, :show_zero
+  attr_accessor :by_user, :total, :total_type, :show_zero, :interval, :internal_only
   alias_method :show_zero?, :show_zero
+  alias_method :internal_only?, :internal_only
 
   def initialize(attribs = {})
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    update(attribs)
     self.total_type ||= :sum
     self.by_user = {}
     self.show_zero = false
+  end
+
+  def update(attribs)
+    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
+    @total = nil if total_type == :none
+    if @internal_only && by_user
+      by_user.select! { |user, _| user.gm_info(@interval).internal? }
+    end
   end
 
   # `total_type` can be `:none`, `:sum`, `:average`, or a custom value. If a custom value, total
@@ -15,6 +24,7 @@ class GmSummary
   def total
     return nil if total_type == :none
     return @total if defined?(@total)
+    update(internal_only: true) if @internal_only
     if total_type.in? [:sum, :average]
       non_nil = by_user.values.reject(&:nil?)
       @total = non_nil.sum

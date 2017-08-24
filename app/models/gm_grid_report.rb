@@ -164,13 +164,13 @@ class GmGridReport
       users.each { |u| s[u] = u.gm_info(interval).payroll_tax? && summaries[:wage][u].present? ? summaries[:wage][u] * payroll_tax_rate : nil }
     end
 
-    # Hours worked by internal folks.
+    # Total hours worked
     summaries[:worker_hours] = GmSummary.new.tap do |s|
-      users.each { |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:hours] : nil }
+      users.each { |u| s[u] = totals[:wage][:by_user][u][:hours] }
     end
 
     summaries[:paid_hours] = GmSummary.new.tap do |s|
-      users.each { |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:dollars] / u.gm_wage_rate(interval).val : nil }
+      users.each { |u| s[u] = totals[:wage][:by_user][u][:dollars] / u.gm_wage_rate(interval).val }
     end
 
     summaries[:billed_hours] = GmSummary.new.tap do |s|
@@ -180,27 +180,34 @@ class GmGridReport
     summaries[:average_billed_rate] = summaries[:revenue] / summaries[:billed_hours]
 
     # PTO chunks still get generated even though not shown in main grid
-    summaries[:pto_hours_claimed] = GmSummary.new.tap do |s|
+    summaries[:pto_hours_claimed] = GmSummary.new(interval: interval, internal_only: true).tap do |s|
       users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:rounded_hours) }
     end
 
     summaries[:pto_dollars_claimed] = summaries[:pto_hours_claimed] * summaries[:wage_rate]
+    summaries[:pto_dollars_claimed].update(interval: interval, internal_only: true)
 
     summaries[:hours_incl_pto] = summaries[:paid_hours] + summaries[:pto_hours_claimed]
+    summaries[:hours_incl_pto].update(interval: interval, internal_only: true)
 
     summaries[:wages_incl_pto] = summaries[:wage] + summaries[:pto_dollars_claimed]
+    summaries[:wages_incl_pto].update(interval: interval, internal_only: true)
 
     summaries[:pto_election] = GmSummary.new.tap do |s|
       users.each{ |u| s[u] = u.gm_pto_election(interval).try(:val) }
     end
 
     summaries[:gross_pto_hours] = summaries[:paid_hours] / 7
+    summaries[:gross_pto_hours].update(interval: interval, internal_only: true)
 
     summaries[:net_pto_hours] = summaries[:gross_pto_hours] - summaries[:pto_hours_claimed]
+    summaries[:net_pto_hours].update(interval: interval, internal_only: true, total_type: :sum)
 
     summaries[:gross_pto] = summaries[:gross_pto_hours] * summaries[:wage_rate]
+    summaries[:gross_pto].update(interval: interval, internal_only: true)
 
     summaries[:net_pto] = summaries[:gross_pto] - summaries[:pto_dollars_claimed]
+    summaries[:net_pto].update(interval: interval, internal_only: true)
 
     # Individual surplus calculations
     summaries[:worker_hours_share] = summaries[:worker_hours] / summaries[:worker_hours].total
