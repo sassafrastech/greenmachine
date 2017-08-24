@@ -4,9 +4,11 @@
   <%= render('summary_row', name: 'Total Revenue', key: :revenue, type: :currency) %>
   <%= render('summary_row', name: 'Total Wages', key: :wage, type: :currency) %>
   <%= render('summary_row', name: 'Revenue/Wage', key: :rev_wage, type: :float) %>
+  <%= render('summary_row', name: 'Average Billed Rate', key: :average_billed_rate, type: :currency) %>
 
   <tr><td>&nbsp;</td></tr>
 
+  <%= render('summary_row', name: 'Billed Hours', key: :billed_hours, type: :float) %>
   <%= render('summary_row', name: 'Paid Hours', key: :paid_hours, type: :float) %>
   <%= render('summary_row', name: 'Total Hours', key: :worker_hours, type: :float) %>
   <%= render('summary_row', name: 'Hours/Day', key: :hours_per_day, type: :float) %>

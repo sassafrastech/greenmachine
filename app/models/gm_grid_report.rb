@@ -158,21 +158,27 @@ class GmGridReport
     summaries[:rev_wage].show_zero = true
 
     summaries[:health_insurance] = GmSummary.new.tap do |s|
-      users.each{ |u| s[u] = u.gm_health_insurance(interval).try(:val) }
+      users.each { |u| s[u] = u.gm_health_insurance(interval).try(:val) }
     end
 
     summaries[:payroll_tax] = GmSummary.new.tap do |s|
-      users.each{ |u| s[u] = u.gm_info(interval).payroll_tax? && summaries[:wage][u].present? ? summaries[:wage][u] * payroll_tax_rate : nil }
+      users.each { |u| s[u] = u.gm_info(interval).payroll_tax? && summaries[:wage][u].present? ? summaries[:wage][u] * payroll_tax_rate : nil }
     end
 
     # Hours worked by internal folks.
     summaries[:worker_hours] = GmSummary.new.tap do |s|
-      users.each{ |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:hours] : nil }
+      users.each { |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:hours] : nil }
     end
 
     summaries[:paid_hours] = GmSummary.new.tap do |s|
-      users.each{ |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:dollars] / u.gm_wage_rate(interval).val : nil }
+      users.each { |u| s[u] = u.gm_info(interval).internal? ? totals[:wage][:by_user][u][:dollars] / u.gm_wage_rate(interval).val : nil }
     end
+
+    summaries[:billed_hours] = GmSummary.new.tap do |s|
+      users.each { |u| s[u] = totals[:revenue][:by_user][u][:hours] }
+    end
+
+    summaries[:average_billed_rate] = summaries[:revenue] / summaries[:billed_hours]
 
     # PTO chunks still get generated even though not shown in main grid
     summaries[:pto_hours_claimed] = GmSummary.new.tap do |s|
