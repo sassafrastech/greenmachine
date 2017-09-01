@@ -50,11 +50,11 @@ class GmGridReport
       self.warnings << "The following users had hours but no base wage rate: #{no_rate.map(&:name).join(', ')}"
     end
 
-    no_pto_election = users.select{ |u| u.gm_info(interval).has_pto? && u.gm_pto_election(interval).nil? }
-    self.users -= no_pto_election
-    unless no_pto_election.empty?
-      self.warnings << "The following users had hours but no PTO election: #{no_pto_election.map(&:name).join(', ')}"
-    end
+    #no_pto_election = users.select{ |u| u.gm_info(interval).has_pto? && u.gm_pto_election(interval).nil? }
+    #self.users -= no_pto_election
+    #unless no_pto_election.empty?
+    #  self.warnings << "The following users had hours but no PTO election: #{no_pto_election.map(&:name).join(', ')}"
+    #end
   end
 
   def check_chunks_for_issues
