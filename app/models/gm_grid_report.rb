@@ -179,6 +179,8 @@ class GmGridReport
 
     summaries[:average_billed_rate] = summaries[:revenue] / summaries[:billed_hours]
 
+    #summaries[:average_wage_rate] = summaries[:wage] / summaries[:paid_hours]
+
     summaries[:percent_billed] = summaries[:billed_hours] * 100 / summaries[:paid_hours]
 
     # PTO chunks still get generated even though not shown in main grid

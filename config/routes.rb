@@ -1,5 +1,6 @@
 get '/green-machine' => 'gm_reports#show'
 get '/green-machine/reports' => 'gm_reports#show'
+get '/green-machine/reports/last' => 'gm_reports#show', as: :gm_last_month_report, month: :last
 get '/green-machine/reports/:start/:finish' => 'gm_reports#show'
 get '/green-machine/reports/:start/:finish/project-detail/:project_id' => 'gm_reports#project_detail'
 get '/green-machine/reports/:start/:finish/project-detail/:project_id/create-invoice' => 'gm_reports#create_invoice', as: :gm_create_invoice

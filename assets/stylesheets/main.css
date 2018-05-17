@@ -2,6 +2,11 @@
   float: right;
 }
 
+.last-month-link {
+  float: right;
+  margin: 5px 15px;
+}
+
 #report-jump-form input[type=submit] {
   height: 26px;
   line-height: 5px;

@@ -37,17 +37,22 @@ class GmReportsController < GmApplicationController
   private
 
   def build_interval
-    begin
-      params[:start] = params[:start] ? Date.parse(params[:start]) : Date.today.at_beginning_of_month
-      params[:finish] = params[:finish] ? Date.parse(params[:finish]) : Date.today.at_end_of_month
-    rescue ArgumentError
-      @date_error = "Error parsing dates."
-      return render :show
-    end
+    if params[:month] == :last
+      params[:start] = Date.today.at_beginning_of_month - 1.month
+      params[:finish] = params[:start].at_end_of_month
+    else
+      begin
+        params[:start] = params[:start] ? Date.parse(params[:start]) : Date.today.at_beginning_of_month
+        params[:finish] = params[:finish] ? Date.parse(params[:finish]) : Date.today.at_end_of_month
+      rescue ArgumentError
+        @date_error = "Error parsing dates."
+        return render :show
+      end
 
-    if params[:start] > params[:finish]
-      @date_error = "Start date is after finish date."
-      return render :show
+      if params[:start] > params[:finish]
+        @date_error = "Start date is after finish date."
+        return render :show
+      end
     end
 
     @interval = GmInterval.new(start: params[:start], finish: params[:finish])
