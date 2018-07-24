@@ -1,5 +1,7 @@
 # Holds a number of hours and a rate, and optionally an issue. Represents a chunk of work.
 class GmChunk
+  UNBILLED_UNPAID_ACTIVITY_ID = 17
+
   attr_accessor :issue, :hours, :dollars, :rates
 
   def initialize(attribs = {})

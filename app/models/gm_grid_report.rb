@@ -28,6 +28,7 @@ class GmGridReport
       select('user_id, project_id, issue_id, SUM(hours) AS hours').
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
+      where('activity_id != ?', GmChunk::UNBILLED_UNPAID_ACTIVITY_ID).
       group(:project_id, :user_id, :issue_id)
   end
 
