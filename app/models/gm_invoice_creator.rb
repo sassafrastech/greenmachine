@@ -1,5 +1,5 @@
 class GmInvoiceCreator
-  ITEM_IDS = {development: 17}
+  ITEM_IDS = {development: 17, subcontracted_services: 26}
   INVOICE_NUM_LENGTH = 5
   NET_30_TERMS = 3
 
@@ -32,7 +32,7 @@ class GmInvoiceCreator
       line_item.sales_item! do |detail|
         detail.unit_price = rate
         detail.quantity = hours
-        detail.item_id = ITEM_IDS[:development]
+        detail.item_id = ITEM_IDS[user == :sassy ? :development : :subcontracted_services]
       end
       invoice.line_items << line_item
     end
