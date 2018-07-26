@@ -17,8 +17,15 @@ class GmInvoiceCreator
     # Given a Customer with ID=99 lets invoice them for an Item with ID=500
     invoice = Quickbooks::Model::Invoice.new
     invoice.customer_id = project.gm_qb_customer_id || (raise "No customer ID.")
-    invoice.txn_date = Date.today - Date.today.day # Last day of last month
+
+    # Last day of last month
+    invoice.txn_date = Date.today - Date.today.day
+
+    # This reflects net 30 terms since we don't actually send the invoice on the last day of the month.
+    invoice.due_date = Date.today + 30.days
+
     invoice.doc_number = next_number
+
     invoice.sales_term_id = NET_30_TERMS
     invoice.billing_email_address = email_addresses
 
