@@ -3,12 +3,13 @@ class GmInvoiceCreator
   INVOICE_NUM_LENGTH = 5
   NET_30_TERMS = 3
 
-  attr_accessor :report, :credential, :services
+  attr_accessor :report, :credential, :services, :skip_nums
 
   delegate :project, :interval, to: :report
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    self.skip_nums = 0
   end
 
   def create
@@ -23,8 +24,6 @@ class GmInvoiceCreator
 
     # This reflects net 30 terms since we don't actually send the invoice on the last day of the month.
     invoice.due_date = Date.today + 30.days
-
-    invoice.doc_number = next_number
 
     invoice.sales_term_id = NET_30_TERMS
     invoice.billing_email_address = email_addresses
@@ -44,11 +43,22 @@ class GmInvoiceCreator
       invoice.line_items << line_item
     end
 
-    created_invoice = services[:invoice].create(invoice)
-
-    attach_csv(created_invoice)
-
-    created_invoice
+    # Loop in case there are deleted invoices and we have to retry with a new number
+    loop do
+      begin
+        invoice.doc_number = next_number
+        created_invoice = services[:invoice].create(invoice) # May error
+        attach_csv(created_invoice)
+        break created_invoice
+      rescue Quickbooks::IntuitRequestException => error
+        if error.to_s.match("You must specify a different number. This number has already been used")
+          self.skip_nums += 1
+          raise if skip_nums >= 5
+        else
+          raise
+        end
+      end
+    end
   end
 
   private
@@ -65,7 +75,7 @@ class GmInvoiceCreator
   def next_number
     existing = services[:invoice].query('SELECT Id, DocNumber FROM Invoice ORDER BY MetaData.CreateTime DESC')
     latest_num = existing.entries.first.doc_number
-    (latest_num.to_i + 1).to_s.rjust(INVOICE_NUM_LENGTH, '0')
+    (latest_num.to_i + 1 + skip_nums).to_s.rjust(INVOICE_NUM_LENGTH, '0')
   end
 
   def attach_csv(invoice)
