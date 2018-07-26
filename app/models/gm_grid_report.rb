@@ -170,6 +170,8 @@ class GmGridReport
       users.each { |u| s[u] = totals[:wage][:by_user][u][:hours] }
     end
 
+    # Not sure why this is here in addition to worker_hours. Perhaps if someone
+    # is making different rates for different things this will be different?
     summaries[:paid_hours] = GmSummary.new.tap do |s|
       users.each { |u| s[u] = totals[:wage][:by_user][u][:dollars] / u.gm_wage_rate(interval).val }
     end
