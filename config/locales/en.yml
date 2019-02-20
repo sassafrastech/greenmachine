@@ -1,3 +1,7 @@
-# English strings go here for Rails i18n
 en:
-  # my_label: "My label"
+  # Overrides to make issues table narrower
+  field_estimated_hours: Estimate
+  label_spent_time: Spent
+  field_fixed_version: Version
+  field_due_date: Due
+  label_related_issues: Related
