@@ -1,3 +1,5 @@
-TODO
+# Configs
 lib/secrets.rb
-.idea
+
+# IDE files
+.idea/
