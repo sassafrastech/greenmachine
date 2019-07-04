@@ -32,7 +32,7 @@
           <% path = "/green-machine/reports/#{params[:start]}/#{params[:finish]}/project-detail/#{project.id}" %>
           <%= link_to("[HTML]", path) %>
           <%= link_to("[CSV]", "#{path}.csv") %>
-          <%= link_to("[Invoice]", "#{path}/create-invoice") unless project.gm_qb_customer_id.blank? %>
+          <%= link_to("[Invoice]", "#{path}/create-invoice") unless project.gm_qb_customer_id.blank? || !@report.invoiceable %>
         <% end %>
       </td>
     </tr>

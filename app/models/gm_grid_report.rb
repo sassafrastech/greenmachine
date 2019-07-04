@@ -1,7 +1,7 @@
 # Handles compilation of data for the main GreenMachine grid report.
 class GmGridReport
   attr_accessor :interval, :chunk_data, :users, :projects, :chunks, :warnings, :project_rates,
-    :user_types, :user_wage_rates, :totals, :summaries, :pto_proj, :internal_projects
+    :user_types, :user_wage_rates, :totals, :summaries, :pto_proj, :internal_projects, :invoiceable
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -13,6 +13,7 @@ class GmGridReport
     generate_chunk_data
     extract_users
     extract_projects
+    check_invoiceability
     check_chunks_for_issues
     build_chunks
     calculate_totals
@@ -89,6 +90,12 @@ class GmGridReport
     unless no_rate.empty?
       self.warnings << "The following projects had hours but no GM project rate: #{no_rate.map(&:name).join(', ')}"
     end
+  end
+
+  # Checks data related to overall invoiceability.
+  def check_invoiceability
+    # Nothing should be invoiceable if the date range isn't a full month.
+    self.invoiceable = interval.full_month?
   end
 
   # Builds chunks (combinations of hour + rate) for revenue and wages.
