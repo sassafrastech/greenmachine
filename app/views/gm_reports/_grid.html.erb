@@ -36,6 +36,7 @@
         <% unless project.gm_qb_customer_id.blank? || !@report.invoiceable %>
           <td>
             <%= link_to("[Invoice]", "#{path}/create-invoice") %>
+            <input type="checkbox" <%= false ? "checked" : "" %> />
           </td>
         <% end %>
       <% end %>
