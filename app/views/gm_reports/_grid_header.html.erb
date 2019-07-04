@@ -1,5 +1,8 @@
 <tr>
   <th></th>
+  <% if grid_type != :summary %>
+    <th>QBO Name</th>
+  <% end %>
   <% @report.users.each do |user| %>
     <th>
       <div class="name"><%= user.firstname %></div>
