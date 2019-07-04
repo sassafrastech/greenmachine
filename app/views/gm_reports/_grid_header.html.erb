@@ -10,5 +10,10 @@
   <% if grid_type != :summary %>
     <th>Total <%= grid_type.to_s.capitalize %></th>
   <% end %>
-  <th></th>
+  <% if grid_type == :revenue %>
+    <th>Reports</th>
+    <% if @report.invoiceable %>
+        <th>Invoicing</th>
+      <% end %>
+  <% end %>
 </tr>

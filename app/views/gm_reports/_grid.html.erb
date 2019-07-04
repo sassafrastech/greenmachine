@@ -27,14 +27,18 @@
 
       <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 2) %></td>
       <td><%= number_to_currency(@report.totals[grid_type][:by_project][project][:dollars]) %></td>
-      <td>
-        <% if grid_type == :revenue %>
+      <% if grid_type == :revenue %>
+        <td>
           <% path = "/green-machine/reports/#{params[:start]}/#{params[:finish]}/project-detail/#{project.id}" %>
           <%= link_to("[HTML]", path) %>
           <%= link_to("[CSV]", "#{path}.csv") %>
-          <%= link_to("[Invoice]", "#{path}/create-invoice") unless project.gm_qb_customer_id.blank? || !@report.invoiceable %>
+        </td>
+        <% unless project.gm_qb_customer_id.blank? || !@report.invoiceable %>
+          <td>
+            <%= link_to("[Invoice]", "#{path}/create-invoice") %>
+          </td>
         <% end %>
-      </td>
+      <% end %>
     </tr>
   <% end %>
 
