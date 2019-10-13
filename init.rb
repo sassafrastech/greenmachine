@@ -4,7 +4,7 @@ require 'secrets'
 # Patches to the Redmine core.
 require 'user_patch'
 require 'project_patch'
-ActionDispatch::Callbacks.to_prepare do
+ActiveSupport::Reloader.to_prepare do
   User.send(:include, UserPatch) unless User.included_modules.include? UserPatch
   Project.send(:include, ProjectPatch) unless Project.included_modules.include? ProjectPatch
 end

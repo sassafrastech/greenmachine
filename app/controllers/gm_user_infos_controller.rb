@@ -1,6 +1,6 @@
 class GmUserInfosController < GmApplicationController
   unloadable
-  before_filter :authorize
+  before_action :authorize
   before_action :set_gm_user_info, only: [:show, :edit, :update, :destroy]
 
   # GET /gm_user_infos

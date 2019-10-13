@@ -1,7 +1,7 @@
 class GmReportsController < GmApplicationController
   unloadable
 
-  before_filter :authorize, :build_interval
+  before_action :authorize, :build_interval
 
   def show
     @report = GmGridReport.new(interval: @interval)
