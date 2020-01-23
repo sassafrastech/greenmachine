@@ -204,7 +204,7 @@ class GmGridReport
       users.each{ |u| s[u] = u.gm_pto_election(interval).try(:val) }
     end
 
-    summaries[:gross_pto_hours] = summaries[:paid_hours] / 7
+    summaries[:gross_pto_hours] = summaries[:paid_hours] / pto_ratio
     summaries[:gross_pto_hours].update(interval: interval, internal_only: true)
 
     summaries[:net_pto_hours] = summaries[:gross_pto_hours] - summaries[:pto_hours_claimed]
@@ -239,6 +239,10 @@ class GmGridReport
 
   def payroll_tax_rate
     GmRateFinder.find('payroll_tax_pct', interval).try(:val).try(:/, 100) || 0
+  end
+
+  def pto_ratio
+    GmRateFinder.find('pto_ratio', interval).try(:val) || 7
   end
 
   def general_expenses
