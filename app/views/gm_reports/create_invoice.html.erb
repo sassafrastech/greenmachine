@@ -8,7 +8,7 @@
     Quickbooks authorization failed.
   <% end %>
   Click the button below and then
-  <%= link_to('try again', gm_create_invoice_path(params.slice(:start, :finish, :project_id))) %>.
+  <%= link_to('try again', gm_create_invoice_path(params.permit(:start, :finish, :project_id))) %>.
 
   <br/><br/>
 

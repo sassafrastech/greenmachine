@@ -3,8 +3,6 @@ class GmQuickbooksController < ApplicationController
 
   def authenticate
     callback = gm_quickbooks_callback_url
-    token = $qb_oauth_consumer.get_request_token(oauth_callback: callback)
-    session[:qb_request_token] = token
     grant_url = $qb_oauth_consumer.auth_code.authorize_url(
       redirect_uri: callback,
       state: SecureRandom.hex(12),
@@ -15,7 +13,8 @@ class GmQuickbooksController < ApplicationController
 
   def callback
     if params[:state]
-      response = $qb_oauth_consumer.auth_code.get_token(params[:code], redirect_uri: gm_quickbooks_callback_url)
+      callback = gm_quickbooks_callback_url
+      response = $qb_oauth_consumer.auth_code.get_token(params[:code], redirect_uri: callback)
       if response
         GmCredential.delete_all
         GmCredential.create(

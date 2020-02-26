@@ -7,6 +7,6 @@ class GmCredential < ActiveRecord::Base
   end
 
   def access_token
-    @access_token ||= OAuth::AccessToken.new($qb_oauth_consumer, token, secret)
+    @access_token ||= OAuth2::AccessToken.new($qb_oauth_consumer, token)
   end
 end
