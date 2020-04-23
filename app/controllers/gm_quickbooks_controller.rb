@@ -18,9 +18,9 @@ class GmQuickbooksController < ApplicationController
       if response
         GmCredential.delete_all
         GmCredential.create(
-          token: response.token,
-          secret: response.refresh_token,
-          # token_expires_at: Time.zone.at(response.expires_at),
+          access_token: response.token,
+          refresh_token: response.refresh_token,
+          token_expires_at: Time.zone.at(response.expires_at),
           company_id: params['realmId']
         )
       end
