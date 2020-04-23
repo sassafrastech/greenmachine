@@ -23,5 +23,5 @@
   <!-- this will display a button that the user clicks to start the flow -->
   <ipp:connectToIntuit></ipp:connectToIntuit>
 <% else %>
-  Success! (ID #<%= @invoice.id %>)
+  Success! Created invoice number <%= @invoice.doc_number %> (txnId <%= @invoice.id %>).
 <% end %>

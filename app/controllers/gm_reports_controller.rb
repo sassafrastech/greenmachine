@@ -22,15 +22,21 @@ class GmReportsController < GmApplicationController
   def create_invoice
     build_project_report
 
-    if credential = GmCredential.first
-      begin
-        @creator = GmInvoiceCreator.new(report: @report, credential: credential)
-        @invoice = @creator.create
-      rescue Quickbooks::AuthorizationFailure
-        @auth_fail = true
-      end
-    else
-      @no_token = true
+    credential = GmCredential.first
+
+    @no_token = true and return unless credential
+
+    begin
+      credential.refresh! if credential.token_expires_at < Time.zone.now
+    rescue
+      @auth_fail = true and return
+    end
+
+    begin
+      @creator = GmInvoiceCreator.new(report: @report, credential: credential)
+      @invoice = @creator.create
+    rescue Quickbooks::AuthorizationFailure
+      @auth_fail = true
     end
   end
 
