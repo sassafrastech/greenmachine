@@ -26,6 +26,11 @@
       <% end %>
 
       <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 2) %></td>
+      <td>
+        <% if grid_type == :revenue %>
+          <%= number_with_precision(@report.totals[grid_type][:by_project][project][:unbilled_hours], precision: 2) %>
+        <% end %>
+      </td>
       <td><%= number_to_currency(@report.totals[grid_type][:by_project][project][:dollars]) %></td>
       <td>
         <% if grid_type == :revenue %>

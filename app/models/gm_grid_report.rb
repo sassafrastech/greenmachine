@@ -25,7 +25,7 @@ class GmGridReport
   def generate_chunk_data
     self.chunk_data = TimeEntry.
       includes(:project, :user, :issue).
-      select('user_id, project_id, issue_id, SUM(hours) AS hours').
+      select('user_id, project_id, issue_id, activity_id, SUM(hours) AS hours').
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
       where('activity_id != ?', GmChunk::UNBILLED_UNPAID_ACTIVITY_ID).
@@ -99,7 +99,9 @@ class GmGridReport
           user: datum.user, project: datum.project, issue: datum.issue)
         if datum_rate && (type == :wage || !datum.project.in?(internal_projects))
           chunks[type][[datum.user, datum.project]] ||= GmChunk.new
-          chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours, rate: datum_rate)
+          chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours,
+                                                              activity_id: datum.activity_id,
+                                                              rate: datum_rate)
         end
       end
     end
@@ -112,10 +114,11 @@ class GmGridReport
 
       # Project totals.
       projects.each do |p|
-        totals[type][:by_project][p] = {hours: 0, dollars: 0}
+        totals[type][:by_project][p] = {hours: 0, unbilled_hours: 0, dollars: 0}
         users.each do |u|
           if chunk = chunks[type][[u, p]]
             totals[type][:by_project][p][:hours] += chunk.rounded_hours
+            totals[type][:by_project][p][:unbilled_hours] += chunk.rounded_unbilled_hours
             totals[type][:by_project][p][:dollars] += chunk.dollars
           end
         end
