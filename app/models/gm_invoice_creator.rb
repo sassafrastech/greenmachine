@@ -27,6 +27,7 @@ class GmInvoiceCreator
 
     invoice.sales_term_id = NET_30_TERMS
     invoice.billing_email_address = email_addresses
+    invoice.allow_online_ach_payment = true
 
     report.totals.each do |user, hours|
       rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
