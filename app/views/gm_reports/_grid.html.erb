@@ -45,7 +45,7 @@
   <% end %>
 
   <tr>
-    <td>Total Hours</td>
+    <td>Total<%= grid_type == :revenue ? " Billed" : "" %> Hours</td>
     <% @report.users.each do |user| %>
       <td><%= number_with_precision(@report.totals[grid_type][:by_user][user][:hours], precision: 2) %></td>
     <% end %>
