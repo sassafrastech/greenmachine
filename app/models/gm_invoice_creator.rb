@@ -34,15 +34,17 @@ class GmInvoiceCreator
     invoice.allow_online_ach_payment = true
 
     report.billed_totals.each do |user, hours|
+      rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
       description = (user == :sassy ? 'Sassafras hours' : "#{user.name} hours")
       item_id = ITEM_IDS[user == :sassy ? :development : :subcontracted_services]
-      invoice.line_items << line_item(user, hours, description, item_id)
+      invoice.line_items << line_item(hours, rate, description, item_id)
     end
 
     report.unbilled_totals.each do |user, hours|
+      rate = 0
       description = (user == :sassy ? 'NO CHARGE hours' : "#{user.name} NO CHARGE hours")
       item_id = ITEM_IDS[:discount]
-      invoice.line_items << line_item(user, -1 * hours, description, item_id)
+      invoice.line_items << line_item(hours, rate, description, item_id)
     end
 
     # Loop in case there are deleted invoices and we have to retry with a new number
@@ -74,9 +76,7 @@ class GmInvoiceCreator
     services.values.each{ |s| credential.apply_to(s) }
   end
 
-  def line_item(user, hours, description, item_id)
-    rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
-
+  def line_item(hours, rate, description, item_id)
     line_item = Quickbooks::Model::InvoiceLineItem.new
     line_item.amount = rate * hours
     line_item.description = "#{project.name}: "
