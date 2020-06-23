@@ -18,7 +18,7 @@ class GmChunk
 
     # Initial entry.
     if attribs[:hours] || attribs[:rate]
-      add_entry(hours: attribs.delete(:hours), rate: attribs.delete(:rate))
+      add_entry(hours: attribs.delete(:hours), rate: attribs.delete(:rate), activity_id: attribs.delete(:activity_id))
     end
 
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}

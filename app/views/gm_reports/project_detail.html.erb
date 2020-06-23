@@ -11,7 +11,7 @@
       <th>Issue</th>
       <th>Billed Hours</th>
     </tr>
-    <% chunks.each do |chunk| %>
+    <% chunks.select { |chunk| !chunk.rounded_billed_hours.zero? }.each do |chunk| %>
       <tr>
         <td><%= chunk.issue.tracker.name %> #<%= chunk.issue.id %>: <%= chunk.issue.subject %></td>
         <td><%= number_with_precision(chunk.rounded_billed_hours, precision: 2) %></td>

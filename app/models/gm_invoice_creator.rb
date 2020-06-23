@@ -1,5 +1,9 @@
 class GmInvoiceCreator
-  ITEM_IDS = {development: 17, subcontracted_services: 26}
+  ITEM_IDS = {
+    development: 17,
+    subcontracted_services: 26,
+    discount: 37
+  }
   INVOICE_NUM_LENGTH = 5
   NET_30_TERMS = 3
 
@@ -30,18 +34,15 @@ class GmInvoiceCreator
     invoice.allow_online_ach_payment = true
 
     report.billed_totals.each do |user, hours|
-      rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
+      description = (user == :sassy ? 'Sassafras hours' : "#{user.name} hours")
+      item_id = ITEM_IDS[user == :sassy ? :development : :subcontracted_services]
+      invoice.line_items << line_item(user, hours, description, item_id)
+    end
 
-      line_item = Quickbooks::Model::InvoiceLineItem.new
-      line_item.amount = rate * hours
-      line_item.description = "#{project.name}: "
-      line_item.description << (user == :sassy ? 'Sassafras hours' : "#{user.name} hours")
-      line_item.sales_item! do |detail|
-        detail.unit_price = rate
-        detail.quantity = hours
-        detail.item_id = ITEM_IDS[user == :sassy ? :development : :subcontracted_services]
-      end
-      invoice.line_items << line_item
+    report.unbilled_totals.each do |user, hours|
+      description = (user == :sassy ? 'NO CHARGE hours' : "#{user.name} NO CHARGE hours")
+      item_id = ITEM_IDS[:discount]
+      invoice.line_items << line_item(user, -1 * hours, description, item_id)
     end
 
     # Loop in case there are deleted invoices and we have to retry with a new number
@@ -71,6 +72,21 @@ class GmInvoiceCreator
     services[:customer] = Quickbooks::Service::Customer.new
 
     services.values.each{ |s| credential.apply_to(s) }
+  end
+
+  def line_item(user, hours, description, item_id)
+    rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
+
+    line_item = Quickbooks::Model::InvoiceLineItem.new
+    line_item.amount = rate * hours
+    line_item.description = "#{project.name}: "
+    line_item.description << description
+    line_item.sales_item! do |detail|
+      detail.unit_price = rate
+      detail.quantity = hours
+      detail.item_id = item_id
+    end
+    line_item
   end
 
   def next_number
