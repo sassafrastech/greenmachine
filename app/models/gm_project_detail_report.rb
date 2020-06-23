@@ -2,7 +2,8 @@
 require 'csv'
 
 class GmProjectDetailReport
-  attr_accessor :interval, :project, :category, :chunk_data, :chunk_groups, :totals
+  attr_accessor :interval, :project, :category, :chunk_data, :chunk_groups,
+    :billed_totals, :unbilled_totals
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -26,7 +27,7 @@ class GmProjectDetailReport
           csv << ['', "#{chunk.issue.tracker.name} ##{chunk.issue.id}: #{chunk.issue.subject}",
             chunk.rounded_billed_hours]
         end
-        csv << ['', "Total", totals[user]]
+        csv << ['', "Total", billed_totals[user]]
       end
     end
   end
@@ -108,6 +109,7 @@ class GmProjectDetailReport
   end
 
   def calculate_totals
-    self.totals = Hash[*chunk_groups.map{ |u, chunks| [u, chunks.sum(&:rounded_billed_hours)] }.flatten]
+    self.billed_totals = Hash[*chunk_groups.map{ |u, chunks| [u, chunks.sum(&:rounded_billed_hours)] }.flatten]
+    # self.unbilled_totals = Hash[*chunk_groups.map{ |u, chunks| [u, chunks.sum(&:rounded_billed_hours)] }.flatten]
   end
 end

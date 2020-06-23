@@ -19,7 +19,7 @@
     <% end %>
     <tr>
       <td>Total</td>
-      <td><%= number_with_precision(@report.totals[user], precision: 2) %></td>
+      <td><%= number_with_precision(@report.billed_totals[user], precision: 2) %></td>
     </tr>
   </table>
 <% end %>

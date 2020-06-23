@@ -29,7 +29,7 @@ class GmInvoiceCreator
     invoice.billing_email_address = email_addresses
     invoice.allow_online_ach_payment = true
 
-    report.totals.each do |user, hours|
+    report.billed_totals.each do |user, hours|
       rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
 
       line_item = Quickbooks::Model::InvoiceLineItem.new
