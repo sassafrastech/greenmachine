@@ -46,7 +46,7 @@ class GmProjectDetailReport
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
       where('activity_id != ?', GmChunk::UNBILLED_UNPAID_ACTIVITY_ID).
-      group(:user_id, :issue_id).
+      group(:user_id, :issue_id, :activity_id).
       order('issues.subject')
 
     query = query.where('issues.category_id = ?', category.id) if category

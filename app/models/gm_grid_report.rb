@@ -29,7 +29,7 @@ class GmGridReport
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
       where('activity_id != ?', GmChunk::UNBILLED_UNPAID_ACTIVITY_ID).
-      group(:project_id, :user_id, :issue_id)
+      group(:project_id, :user_id, :issue_id, :activity_id)
   end
 
   # Get all users included in chunk_data and sort by name.
