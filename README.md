@@ -28,3 +28,13 @@ Redmine Plugin for Sassafras Billing.
 #### Server flags
 
 Run with `QB_SANDBOX_MODE=1 RAILS_ENV=production rails s` to use a sandboxed QB app.
+
+### Troubleshooting
+
+```
+Quickbooks::IntuitRequestException
+Invalid Reference Id: Line.SalesItemLineDetail.ItemRef
+```
+
+You're probably trying to submit an invoice line item with an ID outside the range of available IDs in the QuickBooks Sandbox (e.g. the "Discount" category 37 does not exist).
+For testing purposes, try lowering the ID number.
