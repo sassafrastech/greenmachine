@@ -1,6 +1,8 @@
 <h1>GreenMachine Detail for <%= @project.name %></h1>
 
-Period: <%= params[:start] %> to <%= params[:finish] %>
+<p>Period: <%= params[:start] %> to <%= params[:finish] %></p>
+
+<p>Note: Unbilled time is not shown here, nor in the CSV attached to invoices.</p>
 
 <% @report.chunk_groups.each do |user, chunks| %>
   <h2><%= user == :sassy ? 'Sassafras' : user.name %></h2>
