@@ -6,7 +6,15 @@
       <div class="type"><%= @report.user_types[user].user_type.capitalize %></div>
     </th>
   <% end %>
-  <th>Total<%= grid_type == :summary ? '' : ' Hours' %></th>
+  <th>
+    Total<%=
+      hours_title = "#{grid_type == :revenue ? ' Billed' : ''} Hours"
+      grid_type == :summary ? '' : hours_title
+    %>
+  </th>
+  <th>
+    <%= grid_type == :revenue ? 'Total Unbilled Hours' : '' %>
+  </th>
   <% if grid_type != :summary %>
     <th>Total <%= grid_type.to_s.capitalize %></th>
   <% end %>

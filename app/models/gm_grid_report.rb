@@ -25,11 +25,11 @@ class GmGridReport
   def generate_chunk_data
     self.chunk_data = TimeEntry.
       includes(:project, :user, :issue).
-      select('user_id, project_id, issue_id, SUM(hours) AS hours').
+      select('user_id, project_id, issue_id, activity_id, SUM(hours) AS hours').
       where('spent_on >= ?', interval.start).
       where('spent_on <= ?', interval.finish).
       where('activity_id != ?', GmChunk::UNBILLED_UNPAID_ACTIVITY_ID).
-      group(:project_id, :user_id, :issue_id)
+      group(:project_id, :user_id, :issue_id, :activity_id)
   end
 
   # Get all users included in chunk_data and sort by name.
@@ -99,7 +99,9 @@ class GmGridReport
           user: datum.user, project: datum.project, issue: datum.issue)
         if datum_rate && (type == :wage || !datum.project.in?(internal_projects))
           chunks[type][[datum.user, datum.project]] ||= GmChunk.new
-          chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours, rate: datum_rate)
+          chunks[type][[datum.user, datum.project]].add_entry(hours: datum.hours,
+                                                              activity_id: datum.activity_id,
+                                                              rate: datum_rate)
         end
       end
     end
@@ -109,14 +111,16 @@ class GmGridReport
     self.totals = {revenue: {by_project: {}, by_user: {}}, wage: {by_project: {}, by_user: {}}}
 
     [:revenue, :wage].each do |type|
+      hide_unbilled = type == :revenue
 
       # Project totals.
       projects.each do |p|
-        totals[type][:by_project][p] = {hours: 0, dollars: 0}
+        totals[type][:by_project][p] = {hours: 0, unbilled_hours: 0, dollars: 0}
         users.each do |u|
           if chunk = chunks[type][[u, p]]
-            totals[type][:by_project][p][:hours] += chunk.rounded_hours
-            totals[type][:by_project][p][:dollars] += chunk.dollars
+            totals[type][:by_project][p][:hours] += hide_unbilled ? chunk.rounded_billed_hours : chunk.rounded_total_hours
+            totals[type][:by_project][p][:unbilled_hours] += chunk.rounded_unbilled_hours
+            totals[type][:by_project][p][:dollars] += hide_unbilled ? chunk.billed_dollars : chunk.total_dollars
           end
         end
       end
@@ -126,8 +130,8 @@ class GmGridReport
         totals[type][:by_user][u] = {hours: 0, dollars: 0}
         projects.each do |p|
           if chunk = chunks[type][[u, p]]
-            totals[type][:by_user][u][:hours] += chunk.rounded_hours
-            totals[type][:by_user][u][:dollars] += chunk.dollars
+            totals[type][:by_user][u][:hours] += hide_unbilled ? chunk.rounded_billed_hours : chunk.rounded_total_hours
+            totals[type][:by_user][u][:dollars] += hide_unbilled ? chunk.billed_dollars : chunk.total_dollars
           end
         end
       end
@@ -188,7 +192,7 @@ class GmGridReport
 
     # PTO chunks still get generated even though not shown in main grid
     summaries[:pto_hours_claimed] = GmSummary.new(interval: interval, internal_only: true).tap do |s|
-      users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:rounded_hours) }
+      users.each { |u| s[u] = chunks[:wage][[u, pto_proj]].try(:rounded_total_hours) }
     end
 
     summaries[:pto_dollars_claimed] = summaries[:pto_hours_claimed] * summaries[:wage_rate]

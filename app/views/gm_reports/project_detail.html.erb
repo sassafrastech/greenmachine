@@ -1,23 +1,25 @@
 <h1>GreenMachine Detail for <%= @project.name %></h1>
 
-Period: <%= params[:start] %> to <%= params[:finish] %>
+<p>Period: <%= params[:start] %> to <%= params[:finish] %></p>
+
+<p>Note: Unbilled time is not shown here, nor in the CSV attached to invoices.</p>
 
 <% @report.chunk_groups.each do |user, chunks| %>
   <h2><%= user == :sassy ? 'Sassafras' : user.name %></h2>
   <table>
     <tr>
       <th>Issue</th>
-      <th>Hours</th>
+      <th>Billed Hours</th>
     </tr>
-    <% chunks.each do |chunk| %>
+    <% chunks.select { |chunk| !chunk.rounded_billed_hours.zero? }.each do |chunk| %>
       <tr>
         <td><%= chunk.issue.tracker.name %> #<%= chunk.issue.id %>: <%= chunk.issue.subject %></td>
-        <td><%= number_with_precision(chunk.rounded_hours, precision: 2) %></td>
+        <td><%= number_with_precision(chunk.rounded_billed_hours, precision: 2) %></td>
       </tr>
     <% end %>
     <tr>
       <td>Total</td>
-      <td><%= number_with_precision(@report.totals[user], precision: 2) %></td>
+      <td><%= number_with_precision(@report.billed_totals[user], precision: 2) %></td>
     </tr>
   </table>
 <% end %>

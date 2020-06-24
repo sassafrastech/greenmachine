@@ -14,18 +14,24 @@
         <% end %>
       </td>
 
+      <% hide_unbilled = grid_type == :revenue %>
       <% @report.users.each do |user| %>
         <td>
           <% if chunk = @report.chunks[grid_type][[user, project]] %>
-            <div class="hours"><%= number_with_precision(chunk.rounded_hours, precision: 2) %></div>
+            <div class="hours"><%= number_with_precision(hide_unbilled ? chunk.rounded_billed_hours : chunk.rounded_total_hours, precision: 2) %></div>
             <div class="rate">
-              <%= number_to_currency(chunk.rate.val) %><%= chunk.multiple_rates? ? '*' : '' %>
+              <%= number_to_currency(chunk.rate(hide_unbilled).val) %><%= chunk.multiple_rates? ? '*' : '' %>
             </div>
           <% end %>
         </td>
       <% end %>
 
       <td><%= number_with_precision(@report.totals[grid_type][:by_project][project][:hours], precision: 2) %></td>
+      <td>
+        <% if grid_type == :revenue %>
+          <%= number_with_precision(@report.totals[grid_type][:by_project][project][:unbilled_hours], precision: 2) %>
+        <% end %>
+      </td>
       <td><%= number_to_currency(@report.totals[grid_type][:by_project][project][:dollars]) %></td>
       <td>
         <% if grid_type == :revenue %>
@@ -39,7 +45,7 @@
   <% end %>
 
   <tr>
-    <td>Total Hours</td>
+    <td>Total<%= grid_type == :revenue ? " Billed" : "" %> Hours</td>
     <% @report.users.each do |user| %>
       <td><%= number_with_precision(@report.totals[grid_type][:by_user][user][:hours], precision: 2) %></td>
     <% end %>
