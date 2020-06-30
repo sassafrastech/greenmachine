@@ -1,5 +1,8 @@
 # Configs
 lib/secrets.rb
 
+# Local bundle installs
+vendor/bundle/
+
 # IDE files
 .idea/
