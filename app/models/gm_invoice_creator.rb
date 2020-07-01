@@ -33,14 +33,16 @@ class GmInvoiceCreator
     invoice.allow_online_ach_payment = true
 
     report.billed_totals.each do |user, hours|
+      next if hours.zero?
       rate = user == :sassy ? project.gm_full_rate(interval).val : user.gm_project_rate(project, interval).val
-      description = (user == :sassy ? 'Sassafras hours' : "#{user.name} hours")
+      description = "#{user == :sassy ? "Sassafras" : user.name} hours"
       invoice.line_items << line_item(user, hours, rate, description)
     end
 
     report.unbilled_totals.each do |user, hours|
+      next if hours.zero?
       rate = 0
-      description = (user == :sassy ? 'NO CHARGE hours' : "#{user.name} NO CHARGE hours")
+      description = "#{user == :sassy ? "Sassafras" : user.name} no charge hours"
       invoice.line_items << line_item(user, hours, rate, description)
     end
 
