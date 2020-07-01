@@ -23,10 +23,15 @@ class GmProjectDetailReport
 
       chunk_groups.each do |user, chunks|
         csv << [user == :sassy ? 'Sassafras' : user.name]
-        chunks.each do |chunk|
-          csv << ['', "#{chunk.issue.tracker.name} ##{chunk.issue.id}: #{chunk.issue.subject}",
-            chunk.rounded_billed_hours]
-        end
+        chunks
+          .select { |chunk| !chunk.rounded_billed_hours.zero? }
+          .each do |chunk|
+            csv << [
+              '',
+              "#{chunk.issue.tracker.name} ##{chunk.issue.id}: #{chunk.issue.subject}",
+              chunk.rounded_billed_hours
+            ]
+          end
         csv << ['', "Total", billed_totals[user]]
       end
     end
