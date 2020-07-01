@@ -14,7 +14,9 @@ class GmReportsController < GmApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        render_csv(filename: @report.csv_filename, content: @report.to_csv)
+        filename = sanitize_filename(@report.csv_filename)
+        headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
+        render(body: @report.to_csv, content_type: "text/csv")
       end
     end
   end
@@ -69,23 +71,6 @@ class GmReportsController < GmApplicationController
     @category = params[:category_id] ? IssueCategory.find(params[:category_id]) : nil
     @report = GmProjectDetailReport.new(interval: @interval, project: @project, category: @category)
     @report.run
-  end
-
-  def render_csv(options)
-    filename = sanitize_filename(options[:filename])
-
-    if request.env['HTTP_USER_AGENT'] =~ /msie/i
-      headers['Pragma'] = 'public'
-      headers["Content-type"] = "text/plain"
-      headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
-      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-      headers['Expires'] = "0"
-    else
-      headers["Content-Type"] ||= 'text/csv'
-      headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
-    end
-
-    render(text: options[:content])
   end
 
   # Removes any non-filename-safe characters from a string so that it can be used in a filename
