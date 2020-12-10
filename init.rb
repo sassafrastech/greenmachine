@@ -16,7 +16,7 @@ gm = Redmine::Plugin.register :greenmachine do
   name 'Sassafras Green Machine'
   author 'Tom Smyth'
   description 'Sassafras Billing Plugin'
-  version '1.1'
+  version '1.1.1'
   url 'https://github.com/sassafrastech/greenmachine'
   author_url 'http://sassafras.coop/about'
 
