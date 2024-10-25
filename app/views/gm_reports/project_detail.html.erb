@@ -13,8 +13,8 @@
     </tr>
     <% chunks.select { |chunk| !chunk.rounded_billed_hours.zero? }.each do |chunk| %>
       <tr>
-        <td><%= chunk.issue.tracker.name %> #<%= chunk.issue.id %>: <%= chunk.issue.subject %></td>
-        <td><%= number_with_precision(chunk.rounded_billed_hours, precision: 2) %></td>
+        <td><%= chunk.issue.tracker.name %> <a href=<%= "/issues/#{chunk.issue.id}" %>>#<%= chunk.issue.id %></a>: <%= chunk.issue.subject %></td>
+        <td><a href=<%= "/time_entries?issue_id=~#{chunk.issue.id}" %>><%= number_with_precision(chunk.rounded_billed_hours, precision: 2) %></a></td>
       </tr>
     <% end %>
     <tr>
