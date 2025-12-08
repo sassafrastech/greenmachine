@@ -1,9 +1,11 @@
+# TODO: require_relative below is a hack to get this old code working in Rails 5,
+#  but it really should be updated to more conventional initialization logic.
 # Secret tokens, etc.
-require 'secrets'
+require_relative 'lib/secrets'
 
 # Patches to the Redmine core.
-require 'user_patch'
-require 'project_patch'
+require_relative 'lib/user_patch'
+require_relative 'lib/project_patch'
 
 require_relative 'config/initializers/quickbooks'
 
@@ -23,8 +25,6 @@ gm = Redmine::Plugin.register :greenmachine do
   menu :top_menu, :polls, { controller: 'gm_reports', action: 'show' },
     caption: 'GreenMachine', if: -> (x) { GmUserInfo.can_view?(User.current) }
 end
-
-ActiveSupport::Dependencies.autoload_paths << "#{gm.directory}/app/models/concerns"
 
 $qb_oauth_consumer = OAuth2::Client.new(QB_KEY, QB_SECRET,
   site: "https://appcenter.intuit.com/connect/oauth2",
