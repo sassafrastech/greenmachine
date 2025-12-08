@@ -1,4 +1,4 @@
-class CreateGmCredentials < ActiveRecord::Migration
+class CreateGmCredentials < ActiveRecord::Migration[4.2]
   def change
     create_table :gm_credentials do |t|
       t.string :token

@@ -1,4 +1,4 @@
-class AdjustRatesTable < ActiveRecord::Migration
+class AdjustRatesTable < ActiveRecord::Migration[4.2]
   def up
     add_column(:gm_rates, :user_type, :string)
     add_index(:gm_rates, :user_type)

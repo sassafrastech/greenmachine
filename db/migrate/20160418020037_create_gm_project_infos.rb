@@ -1,4 +1,4 @@
-class CreateGmProjectInfos < ActiveRecord::Migration
+class CreateGmProjectInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :gm_project_infos do |t|
       t.references :project, index: true, foreign_key: true

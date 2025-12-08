@@ -1,4 +1,4 @@
-class CreateGmRates < ActiveRecord::Migration
+class CreateGmRates < ActiveRecord::Migration[4.2]
   def change
     create_table :gm_rates do |t|
       t.string :kind, null: false

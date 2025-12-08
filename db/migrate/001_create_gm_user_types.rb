@@ -1,4 +1,4 @@
-class CreateGmUserTypes < ActiveRecord::Migration
+class CreateGmUserTypes < ActiveRecord::Migration[4.2]
   def change
     create_table :gm_user_types do |t|
       t.integer :user_id, null: false
