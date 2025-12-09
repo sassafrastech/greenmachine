@@ -54,3 +54,7 @@ module UserPatch
     end
   end
 end
+
+unless User.included_modules.include?(UserPatch)
+  User.send(:include, UserPatch)
+end

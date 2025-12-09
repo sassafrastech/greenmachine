@@ -12,3 +12,7 @@ module ProjectPatch
     delegate :gm_qb_customer_id, :gm_extra_emails, :gm_full_rate, to: :gm_project
   end
 end
+
+unless Project.included_modules.include?(ProjectPatch)
+  Project.send(:include, ProjectPatch)
+end
