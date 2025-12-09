@@ -14,7 +14,7 @@ class GmUserInfo < ActiveRecord::Base
   # We can't use Redmine's permission system for this since it's project-based only.
   # For now anybody that has a user type can see the system.
   def self.can_view?(user)
-    user.present? && current_for(user).try(:active?)
+    user.present? && (user.admin || current_for(user).try(:active?))
   end
 
   def self.current_for(user)
