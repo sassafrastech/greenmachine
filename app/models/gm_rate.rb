@@ -1,5 +1,4 @@
 class GmRate < ActiveRecord::Base
-  unloadable
   include GmIntervalSearchable
 
   DISPLAY_FIELDS = %w(kind user user_type project issue val effective_on)

@@ -1,6 +1,4 @@
 class GmReportsController < GmApplicationController
-  unloadable
-
   before_action :authorize, :build_interval
 
   def show

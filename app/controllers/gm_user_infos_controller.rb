@@ -1,5 +1,4 @@
 class GmUserInfosController < GmApplicationController
-  unloadable
   before_action :authorize
   before_action :set_gm_user_info, only: [:show, :edit, :update, :destroy]
 

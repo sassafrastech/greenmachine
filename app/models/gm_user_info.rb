@@ -1,6 +1,5 @@
 # Stores the user's type for GreenMachine purposes.
 class GmUserInfo < ActiveRecord::Base
-  unloadable
   include GmIntervalSearchable
 
   USER_TYPES = %w(member employee contractor accountant ignore)
