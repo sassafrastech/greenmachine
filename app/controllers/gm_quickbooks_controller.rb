@@ -1,6 +1,4 @@
 class GmQuickbooksController < ApplicationController
-  unloadable
-
   def authenticate
     callback = gm_quickbooks_callback_url
     grant_url = $qb_oauth_consumer.auth_code.authorize_url(

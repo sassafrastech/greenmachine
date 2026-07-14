@@ -1,5 +1,4 @@
 class GmRatesController < GmApplicationController
-  unloadable
   before_action :authorize
   before_action :set_gm_rate, only: [:show, :edit, :update, :destroy]
 
