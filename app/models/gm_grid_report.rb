@@ -225,7 +225,9 @@ class GmGridReport
 
     summaries[:general_expenses_share] = summaries[:worker_hours_share] * general_expenses
 
-    summaries[:total_expenses] = [:gross_pto, :health_insurance, :payroll_tax, :general_expenses_share].map{ |k| summaries[k]}.sum
+    summaries[:total_expenses] = [:gross_pto, :health_insurance, :payroll_tax, :general_expenses_share]
+                                   .map{ |k| summaries[k] }
+                                   .sum(GmSummary.new)
 
     summaries[:surplus] = summaries[:revenue] - summaries[:total_expenses] - summaries[:wage]
 
